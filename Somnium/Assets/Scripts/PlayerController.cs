@@ -14,6 +14,12 @@ public class PlayerController : MonoBehaviour
 
     void Update()
     {
+        // Check if player is in a puzzle
+        if (PuzzleTrigger.isPuzzleActive)
+        {
+            movement = Vector2.zero;
+            return;
+        }
         // Get input (WASD or Arrow Keys)
         movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
