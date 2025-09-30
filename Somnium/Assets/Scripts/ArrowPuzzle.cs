@@ -20,6 +20,8 @@ public class ArrowPuzzle : MonoBehaviour
 
     public void StartPuzzle()
     {
+        currentIndex = 0;
+        feedbackText.text = "New text";
         puzzleUI.SetActive(true);
         puzzleActive = true;
         GenerateSequence();
