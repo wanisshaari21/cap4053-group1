@@ -41,7 +41,16 @@ public class LaserPuzzle : MonoBehaviour
         // Pick random safe tile
         safeTileIndex = Random.Range(0, tiles.Length);
 
-        // Show safe tile for memorization
+        // Delay input enable for 1 frame
+        StartCoroutine(StartPuzzleRoutine());
+    }
+
+    private System.Collections.IEnumerator StartPuzzleRoutine()
+    {
+        // Wait one frame to let the UI system refresh
+        yield return null;
+
+        // Now show safe tile and start logic
         StartCoroutine(ShowSafeTile());
     }
 

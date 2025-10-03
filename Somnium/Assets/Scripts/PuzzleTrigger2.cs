@@ -11,6 +11,11 @@ public class PuzzleTrigger2 : MonoBehaviour
         if (isPlayerNear && Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("Puzzle Opened!");
+            laserPuzzle.puzzleUI.SetActive(true);
+
+            Debug.Log($"activeSelf: {laserPuzzle.puzzleUI.activeSelf}, activeInHierarchy: {laserPuzzle.puzzleUI.activeInHierarchy}");
+
+
             laserPuzzle.StartPuzzle();
             isPuzzleActive = true;
         }
