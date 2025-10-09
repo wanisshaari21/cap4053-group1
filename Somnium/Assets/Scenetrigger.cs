@@ -3,27 +3,28 @@ using UnityEngine.SceneManagement;
 
 public class SceneTrigger : MonoBehaviour
 {
-    [Header("Scene to load when triggered")]
     public string sceneToLoad;
-
-    [Header("Optional: Use for Continue button")]
-    public bool useButtonInstead = false;   // if true, load when OnContinue() is called
+    public bool useButtonInstead = false;
 
     private void OnTriggerEnter2D(Collider2D other)
     {
-        if (!useButtonInstead && other.CompareTag("Player"))
-        {
-            SceneManager.LoadScene(sceneToLoad);
-        }
+        if (useButtonInstead) return;
+        if (!other.CompareTag("Player")) return;
+
+        // Prevent immediate re-trigger right after returning to the scene
+        if (Time.realtimeSinceStartup < PlayerMemory.ignoreTriggersUntil) return;
+
+        // Save where we are in Tutorial before leaving
+        PlayerMemory.savedPosition = other.transform.position;
+        PlayerMemory.hasSaved = true;
+
+        SceneManager.LoadScene(sceneToLoad);
     }
 
-    // 👇 Hook this up to your Continue button
     public void OnContinue()
     {
-        Time.timeScale = 1f; // unpause if needed
+        Time.timeScale = 1f;
         if (!string.IsNullOrEmpty(sceneToLoad))
-        {
             SceneManager.LoadScene(sceneToLoad);
-        }
     }
 }
