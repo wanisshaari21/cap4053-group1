@@ -29,10 +29,13 @@ public class BoardSwapCursor : MonoBehaviour
     public Color selectedColor = new Color(1f, 0.95f, 0.2f, 1f);   // yellow tint
     public Color normalColor = Color.white;
 
-    [Header("Win UI")]
-    public GameObject winPanel;               // popup panel to show on win
-    public UnityEvent onWin;                  // <— MISSING BEFORE
-    public string nextSceneName = "";         // optional
+    [Header("UI References")]
+    public GameObject winPanel;          // Your WinPanel
+    public GameObject instructionsPanel; // Drag your InstructionsCanvas (or parent) here
+    public string nextSceneName;
+
+    public delegate void WinAction();
+    public static event WinAction onWin;
 
     // Internals
     private GameObject[,] tiles;              // every cell has a tile
@@ -47,6 +50,9 @@ public class BoardSwapCursor : MonoBehaviour
         // Hide win panel on start
         if (winPanel) winPanel.SetActive(false);
         Time.timeScale = 1f;
+        // Show instructions overlay
+        if (instructionsPanel != null)
+            instructionsPanel.SetActive(true);
 
         // Auto cell size from a prefab sprite
         var sr = (redPrefab ? redPrefab.GetComponent<SpriteRenderer>() : null);
@@ -251,9 +257,16 @@ public class BoardSwapCursor : MonoBehaviour
 
     void HandleWin()
     {
-        onWin?.Invoke();                // now valid
+        onWin?.Invoke();
+
+        // Show win panel
         if (winPanel) winPanel.SetActive(true);
-        Time.timeScale = 0f;            // pause while popup shows
+
+        // Hide instructions
+        if (instructionsPanel) instructionsPanel.SetActive(false);
+
+        // Pause gameplay
+        Time.timeScale = 0f;
     }
 
     public void OnWinClose()

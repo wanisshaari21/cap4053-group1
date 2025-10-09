@@ -8,6 +8,7 @@ public class LaserPuzzle : MonoBehaviour
     public Image[] tiles;              // Assign Tile_0_0, Tile_0_1, ..., Tile_2_2
     public TextMeshProUGUI feedbackText;
     public GameObject puzzleUI;        // reference to LaserPuzzlePanel
+    public GameObject instructionsPanel; // assign in Inspector
 
     [Header("Settings")]
     public Color defaultColor = Color.white;
@@ -27,12 +28,15 @@ public class LaserPuzzle : MonoBehaviour
         foreach (var tile in tiles)
             tile.color = defaultColor;
     }
-
     public void StartPuzzle()
     {
         puzzleUI.SetActive(true);
         puzzleActive = true;
         feedbackText.text = "";
+
+        // Show instructions overlay
+        if (instructionsPanel != null)
+            instructionsPanel.SetActive(true);
 
         // Reset tiles
         foreach (var tile in tiles)

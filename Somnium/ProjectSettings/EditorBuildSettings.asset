@@ -11,4 +11,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Puzzles/Tutorial Puzzle/TutorialPuzzle.unity
     guid: 63ab0a46e39ce95499216e1ec57832e4
+  - enabled: 1
+    path: Assets/Scenes/Tutorial.unity
+    guid: caa1a4880afd806489386615c9e00d07
   m_configObjects: {}
