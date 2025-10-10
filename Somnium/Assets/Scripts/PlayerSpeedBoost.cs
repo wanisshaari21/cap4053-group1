@@ -22,8 +22,24 @@ public class PlayerSpeedBoost : MonoBehaviour
     public bool TryTriggerBoost()
     {
         if (Time.time < nextAllowed) return false;
-        boostUntil  = Time.time + boostDuration;
+        boostUntil = Time.time + boostDuration;
         nextAllowed = Time.time + Mathf.Max(boostDuration, cooldown);
         return true;
     }
+    
+    // Keeps the boost active by ensuring at least this much time remains.
+    // Also clears cooldown while sustained (so no cast delay).
+    public void SustainBoost(float minRemainingSeconds = 0.25f)
+    {
+        if (minRemainingSeconds <= 0f) minRemainingSeconds = 0.1f;
+
+        // If boost would end sooner than desired, extend it.
+        float targetEnd = Time.time + minRemainingSeconds;
+        if (boostUntil < targetEnd)
+            boostUntil = targetEnd;
+
+        // While a zone is sustaining us, don't enforce cooldown.
+        nextAllowed = Time.time;
+    }
+
 }
