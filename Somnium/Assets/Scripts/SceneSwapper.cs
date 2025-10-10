@@ -1,18 +1,17 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+using UnityEngine.SceneManagement; //dont forget me!
 public class SceneSwapper : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
+#pragma warning disable 0649 //private variables
+    [SerializeField] private string sceneName;
+#pragma warning restore 0649
+    private void OnTriggerEnter2D(Collider2D collision)
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        PlayerController player =
+        collision.gameObject.GetComponent<PlayerController>();
+        if (player)
+            SceneManager.LoadScene(sceneName);
     }
 }
