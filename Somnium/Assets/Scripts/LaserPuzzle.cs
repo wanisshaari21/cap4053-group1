@@ -19,6 +19,7 @@ public class LaserPuzzle : MonoBehaviour
 
     private int safeTileIndex;
     private bool puzzleActive = false;
+    public PuzzleManager puzzleManager; // assign in Inspector
 
     void Start()
     {
@@ -123,6 +124,17 @@ public class LaserPuzzle : MonoBehaviour
         {
             Debug.Log("Puzzle Win!");
             feedbackText.text = "Success!";
+
+
+            if (puzzleManager != null)
+            {
+                puzzleManager.PuzzleCompleted(); // notify manager
+                print("Puzzle manager info sent");
+            }
+            else
+            {
+                print("Puzzle manager null");
+            }
         }
         else
         {

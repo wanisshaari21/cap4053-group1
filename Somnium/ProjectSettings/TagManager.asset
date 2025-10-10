@@ -45,8 +45,8 @@ TagManager:
   - name: Ground
     uniqueID: 3154426499
     locked: 0
-  - name: Wall50%
-    uniqueID: 1469608825
+  - name: WallsButYouCanWalkThroughThem
+    uniqueID: 935269171
     locked: 0
   - name: Background Walls
     uniqueID: 2839816675
