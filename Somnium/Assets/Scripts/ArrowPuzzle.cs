@@ -12,6 +12,8 @@ public class ArrowPuzzle : MonoBehaviour
     private KeyCode[] correctSequence;
     private int currentIndex = 0;
     private bool puzzleActive = false;
+    public PuzzleManager puzzleManager; // assign in Inspector
+    public PuzzleTrigger puzzleTrigger;
 
     void Start()
     {
@@ -120,7 +122,12 @@ public class ArrowPuzzle : MonoBehaviour
     {
         feedbackText.text = "Success!";
         puzzleActive = false;
-        // TODO: call back to PuzzleTrigger to close puzzle
+
+        if (puzzleManager != null)
+            puzzleManager.PuzzleCompleted(); // notify manager
+                                             // TODO: call back to PuzzleTrigger to close puzzle
+        if (puzzleTrigger != null)
+            puzzleTrigger.PuzzleCompleted();
     }
 
     void PuzzleFail()
