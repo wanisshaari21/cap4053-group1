@@ -13,6 +13,7 @@ public class ArrowPuzzle : MonoBehaviour
     private int currentIndex = 0;
     private bool puzzleActive = false;
     public PuzzleManager puzzleManager; // assign in Inspector
+    public PuzzleTrigger puzzleTrigger;
 
     void Start()
     {
@@ -124,7 +125,9 @@ public class ArrowPuzzle : MonoBehaviour
 
         if (puzzleManager != null)
             puzzleManager.PuzzleCompleted(); // notify manager
-        // TODO: call back to PuzzleTrigger to close puzzle
+                                             // TODO: call back to PuzzleTrigger to close puzzle
+        if (puzzleTrigger != null)
+            puzzleTrigger.PuzzleCompleted();
     }
 
     void PuzzleFail()

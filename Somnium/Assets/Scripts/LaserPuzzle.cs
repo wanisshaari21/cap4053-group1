@@ -20,6 +20,7 @@ public class LaserPuzzle : MonoBehaviour
     private int safeTileIndex;
     private bool puzzleActive = false;
     public PuzzleManager puzzleManager; // assign in Inspector
+    public PuzzleTrigger2 puzzleTrigger;
 
     void Start()
     {
@@ -129,6 +130,11 @@ public class LaserPuzzle : MonoBehaviour
             if (puzzleManager != null)
             {
                 puzzleManager.PuzzleCompleted(); // notify manager
+                if (puzzleTrigger != null)
+                {
+                    puzzleTrigger.PuzzleCompleted();
+                }
+
                 print("Puzzle manager info sent");
             }
             else

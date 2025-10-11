@@ -45,17 +45,26 @@ TagManager:
   - name: Ground
     uniqueID: 3154426499
     locked: 0
-  - name: WallsButYouCanWalkThroughThem
-    uniqueID: 935269171
-    locked: 0
   - name: Background Walls
     uniqueID: 2839816675
+    locked: 0
+  - name: WallsUnderWalls
+    uniqueID: 935269171
     locked: 0
   - name: Walls
     uniqueID: 2746733309
     locked: 0
+  - name: WallsOnTopOfWalls
+    uniqueID: 3560240939
+    locked: 0
   - name: Character
     uniqueID: 2681424111
+    locked: 0
+  - name: Door
+    uniqueID: 1254607851
+    locked: 0
+  - name: WalkableWalls
+    uniqueID: 2130227767
     locked: 0
   - name: Enemies
     uniqueID: 2141854715

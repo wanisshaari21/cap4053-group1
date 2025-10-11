@@ -5,10 +5,11 @@ public class PuzzleTrigger : MonoBehaviour
     public ArrowPuzzle arrowPuzzle;  // Drag your UI Panel here in the Inspector
     private bool isPlayerNear = false;
     public static bool isPuzzleActive = false;
+    private bool puzzleEnterable = true;
 
     void Update()
     {
-        if (isPlayerNear && Input.GetKeyDown(KeyCode.F))
+        if (isPlayerNear && Input.GetKeyDown(KeyCode.F) && puzzleEnterable == true)
         {
             Debug.Log("Puzzle Opened!");
             arrowPuzzle.StartPuzzle();
@@ -20,6 +21,12 @@ public class PuzzleTrigger : MonoBehaviour
             arrowPuzzle.EndPuzzle();
             isPuzzleActive = false;
         }
+    }
+
+    public void PuzzleCompleted()
+    {
+        puzzleEnterable = false;
+        Debug.Log("Puzzle enterable is now false");
     }
 
     private void OnTriggerEnter2D(Collider2D other)
