@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.Rendering.Universal; // for Light2D (URP 2D)
 
 [RequireComponent(typeof(SpriteRenderer))]
-public class BoostFX : MonoBehaviour
+public class PlayerSpeedBoostFX : MonoBehaviour
 {
     [Header("Light (optional)")]
     public Light2D visionLight;          // drag your child Light2D here (can be null)

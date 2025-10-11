@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 [RequireComponent(typeof(Collider2D))]
-public class ProximityBoostSustainZone : MonoBehaviour
+public class PlayerSpeedBoostSustainZone : MonoBehaviour
 {
     [SerializeField] string triggerTag = "Player";
     [SerializeField] float minRemainingSeconds = 0.30f; // how much time to keep on the clock
