@@ -194,6 +194,7 @@ MonoBehaviour:
   - {fileID: 2048049458}
   feedbackText: {fileID: 838021634}
   puzzleUI: {fileID: 7926281}
+  instructionsPanel: {fileID: 0}
   defaultColor: {r: 1, g: 1, b: 1, a: 1}
   safeColor: {r: 0, g: 1, b: 0, a: 1}
   laserColor: {r: 1, g: 0, b: 0, a: 1}
@@ -300,6 +301,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ed2497c950cabf4d9f43a7a27dd1a3a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sceneName: 
 --- !u!4 &286425556
 Transform:
   m_ObjectHideFlags: 0
@@ -436,6 +438,10 @@ PrefabInstance:
       propertyPath: m_Name
       value: Character
       objectReference: {fileID: 0}
+    - target: {fileID: 6404949437664711584, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
     - target: {fileID: 6404949437664711587, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
       propertyPath: m_LocalPosition.x
       value: -0.66
@@ -475,6 +481,14 @@ PrefabInstance:
     - target: {fileID: 6404949437664711587, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 6404949437725795507, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
+      propertyPath: m_Layer
+      value: 8
+      objectReference: {fileID: 0}
+    - target: {fileID: 6592932541105674715, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
+      propertyPath: m_Layer
+      value: 8
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -4899,6 +4913,10 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 5352764723555335273, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
+      propertyPath: player
+      value: 
+      objectReference: {fileID: 1070003665}
     - target: {fileID: 8565965419365681440, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: m_Name
       value: Enemy_A
@@ -5483,7 +5501,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: -1548233987
-  m_SortingLayer: 3
+  m_SortingLayer: 4
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
