@@ -2,27 +2,27 @@ using UnityEngine;
 
 public class PuzzleTrigger2 : MonoBehaviour
 {
-    public LaserPuzzle laserPuzzle;  // Drag your UI Panel here in the Inspector
+    public LaserPuzzle laserPuzzle;   // Drag your puzzle manager here
     private bool isPlayerNear = false;
     public static bool isPuzzleActive = false;
 
     void Update()
     {
-        if (isPlayerNear && Input.GetKeyDown(KeyCode.F))
+        // Open puzzle when near + F
+        if (isPlayerNear && !isPuzzleActive && Input.GetKeyDown(KeyCode.F))
         {
             Debug.Log("Puzzle Opened!");
             laserPuzzle.puzzleUI.SetActive(true);
-
-            Debug.Log($"activeSelf: {laserPuzzle.puzzleUI.activeSelf}, activeInHierarchy: {laserPuzzle.puzzleUI.activeInHierarchy}");
-
-
             laserPuzzle.StartPuzzle();
             isPuzzleActive = true;
         }
-        else if (isPlayerNear && Input.GetKeyDown(KeyCode.Escape))
+
+        // Close puzzle with Escape if active
+        if (isPuzzleActive && Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("Puzzle Closed!");
             laserPuzzle.EndPuzzle();
+            laserPuzzle.puzzleUI.SetActive(false);
             isPuzzleActive = false;
         }
     }
@@ -39,9 +39,11 @@ public class PuzzleTrigger2 : MonoBehaviour
         {
             isPlayerNear = false;
 
-            // Optional: hide puzzle if player walks away
+            // Auto-close puzzle if player walks away while it’s open
             if (isPuzzleActive)
             {
+                Debug.Log("Puzzle closed because player left trigger.");
+                laserPuzzle.EndPuzzle();
                 laserPuzzle.puzzleUI.SetActive(false);
                 isPuzzleActive = false;
             }

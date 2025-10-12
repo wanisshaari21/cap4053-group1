@@ -141,4 +141,10 @@ public class LaserPuzzle : MonoBehaviour
         foreach (var tile in tiles)
             tile.color = defaultColor;
     }
+
+    public void ForceCloseFlag()
+    {
+        PuzzleTrigger.isPuzzleActive = false;
+    }
+
 }
