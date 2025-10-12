@@ -37,6 +37,11 @@ public class BoardSwapCursor : MonoBehaviour
     public delegate void WinAction();
     public static event WinAction onWin;
 
+    [Header("Timeout Exit")]
+    public PuzzleTimer timer;        // drag your PuzzleTimer here
+    public string exitSceneName;     // type your hub scene name here in Inspector
+
+
     // Internals
     private GameObject[,] tiles;              // every cell has a tile
     private List<Vector2Int> redCells = new List<Vector2Int>();
@@ -281,4 +286,31 @@ public class BoardSwapCursor : MonoBehaviour
         if (!string.IsNullOrEmpty(nextSceneName))
             SceneManager.LoadScene(nextSceneName);
     }
+
+    // called by PuzzleTimer.OnExpired
+    public void FailDueToTimeout()
+    {
+        if (timer != null) timer.StopTimer();
+
+        // Save player position before leaving
+        var player = GameObject.FindGameObjectWithTag("Player");
+        if (player != null)
+        {
+            PlayerMemory.savedPosition = player.transform.position;
+            PlayerMemory.hasSaved = true;
+        }
+
+        Time.timeScale = 1f;
+        PlayerMemory.ignoreTriggersUntil = Time.realtimeSinceStartup + 0.75f;
+
+        if (!string.IsNullOrEmpty(exitSceneName))
+        {
+            UnityEngine.SceneManagement.SceneManager.LoadScene(exitSceneName);
+        }
+        else
+        {
+            Debug.LogWarning("BoardSwapCursor: exitSceneName is empty; can't exit on timeout.");
+        }
+    }
+
 }

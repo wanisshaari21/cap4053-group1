@@ -6,19 +6,61 @@ public class SceneTrigger : MonoBehaviour
     public string sceneToLoad;
     public bool useButtonInstead = false;
 
-    private void OnTriggerEnter2D(Collider2D other)
-    {
-        if (useButtonInstead) return;
-        if (!other.CompareTag("Player")) return;
+    private bool playerInside = false;
+    private Transform playerTr;
 
-        // Prevent immediate re-trigger right after returning to the scene
+    void Update()
+    {
+        if (!useButtonInstead || !playerInside) return;
+
+        // Legacy + new input system compatible F key check
+#if ENABLE_INPUT_SYSTEM && !ENABLE_LEGACY_INPUT_MANAGER
+        bool pressF = UnityEngine.InputSystem.Keyboard.current != null &&
+                      UnityEngine.InputSystem.Keyboard.current.fKey.wasPressedThisFrame;
+#else
+        bool pressF = Input.GetKeyDown(KeyCode.F);
+#endif
+        if (!pressF) return;
+
         if (Time.realtimeSinceStartup < PlayerMemory.ignoreTriggersUntil) return;
 
-        // Save where we are in Tutorial before leaving
-        PlayerMemory.savedPosition = other.transform.position;
-        PlayerMemory.hasSaved = true;
+        if (playerTr != null)
+        {
+            PlayerMemory.savedPosition = playerTr.position;
+            PlayerMemory.hasSaved = true;
+        }
 
-        SceneManager.LoadScene(sceneToLoad);
+        if (!string.IsNullOrEmpty(sceneToLoad))
+            SceneManager.LoadScene(sceneToLoad);
+    }
+
+    private void OnTriggerEnter2D(Collider2D other)
+    {
+        if (!other.CompareTag("Player")) return;
+
+        if (useButtonInstead)
+        {
+            playerInside = true;
+            playerTr = other.transform;   // wait for F
+        }
+        else
+        {
+            if (Time.realtimeSinceStartup < PlayerMemory.ignoreTriggersUntil) return;
+
+            PlayerMemory.savedPosition = other.transform.position;
+            PlayerMemory.hasSaved = true;
+
+            SceneManager.LoadScene(sceneToLoad);
+        }
+    }
+
+    private void OnTriggerExit2D(Collider2D other)
+    {
+        if (other.CompareTag("Player"))
+        {
+            playerInside = false;
+            playerTr = null;
+        }
     }
 
     public void OnContinue()
