@@ -26,6 +26,10 @@ public class NormalArrowPuzzle : MonoBehaviour
     private float timeRemaining;
     private bool timerRunning = false;
 
+    [Header("Wave Settings")]
+    public int totalWaves = 4; // how many waves total
+    private int currentWave = 0;
+
     void Start()
     {
         puzzleUI.SetActive(false);
@@ -33,13 +37,22 @@ public class NormalArrowPuzzle : MonoBehaviour
 
     public void StartPuzzle()
     {
+        currentWave = 0;
+        StartNextWave();
+    }
+
+    void StartNextWave()
+    {
+        // Cancel any pending delayed actions (prevents overlap bugs)
+        CancelInvoke("HideArrows");
+
         currentIndex = 0;
-        feedbackText.text = "New text";
+        feedbackText.text = $"Wave {currentWave + 1}/{totalWaves}";
         puzzleUI.SetActive(true);
         puzzleActive = true;
         GenerateSequence();
         ShowArrows();
-        Invoke("HideArrows", 5f); // Hide after 5 seconds for memory challenge, consider preventing reentering puzzle for 5 seconds with visual cues
+        Invoke("HideArrows", 3f); // time to memorize before they vanish
         StartTimer();
     }
 
@@ -63,7 +76,7 @@ public class NormalArrowPuzzle : MonoBehaviour
         if (timerRunning)
         {
             timeRemaining -= Time.deltaTime;
-            feedbackText.text = $"Time: {Mathf.Ceil(timeRemaining)}";
+            feedbackText.text = $"{currentWave + 1}/{totalWaves}\nTime: {Mathf.Ceil(timeRemaining)}";
 
             if (timeRemaining <= 0f)
             {
@@ -99,7 +112,17 @@ public class NormalArrowPuzzle : MonoBehaviour
                 if (currentIndex >= correctSequence.Length)
                 {
                     timerRunning = false; // stop timer
-                    PuzzleWin();
+                    currentWave++;
+                    if (currentWave < totalWaves)
+                    {
+                        // Not done yet — go to next wave after short delay
+                        StartCoroutine(NextWaveAfterDelay(1f));
+                    }
+                    else
+                    {
+                        // All waves cleared!
+                        PuzzleWin();
+                    }
                 }
             }
             else
@@ -109,6 +132,13 @@ public class NormalArrowPuzzle : MonoBehaviour
                 PuzzleFail();
             }
         }
+    }
+
+    IEnumerator NextWaveAfterDelay(float delay)
+    {
+        feedbackText.text = "Next wave...";
+        yield return new WaitForSeconds(delay);
+        StartNextWave();
     }
 
     void SpawnPressedArrow(KeyCode key)
