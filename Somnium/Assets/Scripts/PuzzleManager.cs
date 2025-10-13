@@ -11,6 +11,7 @@ public class PuzzleManager : MonoBehaviour
     public Tilemap tilemap;                  // assign the Tilemap with your gate
     public TileBase[] openGateTiles;         // array of open-gate tiles, in order
     public GateTileFinder gateTileFinder;    // reference to the script that detects positions
+    public GameObject swapper;
 
     /// <summary>
     /// Call this from each puzzle when completed.
@@ -49,6 +50,8 @@ public class PuzzleManager : MonoBehaviour
         {
             tilemap.SetTile(positions[i], openGateTiles[i]);
         }
+
+        swapper.SetActive(true);
 
         Debug.Log("Gate opened successfully!");
     }

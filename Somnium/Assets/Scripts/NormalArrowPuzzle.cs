@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class ArrowPuzzle : MonoBehaviour
+public class NormalArrowPuzzle : MonoBehaviour
 {
     public GameObject puzzleUI; // Panel
     public Image[] arrowSlots; // 4 arrow images
@@ -14,7 +14,7 @@ public class ArrowPuzzle : MonoBehaviour
     private int currentIndex = 0;
     private bool puzzleActive = false;
     public PuzzleManager puzzleManager; // assign in Inspector
-    public PuzzleTrigger puzzleTrigger;
+    public ArrowPuzzleTrigger1 puzzleTrigger;
 
     [Header("Key Feedback")]
     public Transform upSpawn, downSpawn, leftSpawn, rightSpawn;  // UI empty objects in Canvas
@@ -166,27 +166,28 @@ public class ArrowPuzzle : MonoBehaviour
             int rand = Random.Range(0, 4);
             switch (rand)
             {
-                case 0:
+                case 0: // Up arrow
                     arrowSlots[i].sprite = upArrow;
-                    correctSequence[i] = KeyCode.S; // inverse ↓
-                    Debug.Log($"Arrow {i}: UP → Expect S");
+                    correctSequence[i] = KeyCode.W; // press W to match ↑
+                    Debug.Log($"Arrow {i}: UP → Expect W");
                     break;
-                case 1:
+                case 1: // Down arrow
                     arrowSlots[i].sprite = downArrow;
-                    correctSequence[i] = KeyCode.W; // inverse ↑
-                    Debug.Log($"Arrow {i}: DOWN → Expect W");
+                    correctSequence[i] = KeyCode.S; // press S to match ↓
+                    Debug.Log($"Arrow {i}: DOWN → Expect S");
                     break;
-                case 2:
+                case 2: // Left arrow
                     arrowSlots[i].sprite = leftArrow;
-                    correctSequence[i] = KeyCode.D; // inverse →
-                    Debug.Log($"Arrow {i}: LEFT → Expect D");
+                    correctSequence[i] = KeyCode.A; // press A to match ←
+                    Debug.Log($"Arrow {i}: LEFT → Expect A");
                     break;
-                case 3:
+                case 3: // Right arrow
                     arrowSlots[i].sprite = rightArrow;
-                    correctSequence[i] = KeyCode.A; // inverse ←
-                    Debug.Log($"Arrow {i}: RIGHT → Expect A");
+                    correctSequence[i] = KeyCode.D; // press D to match →
+                    Debug.Log($"Arrow {i}: RIGHT → Expect D");
                     break;
             }
+
         }
     }
 
@@ -215,7 +216,7 @@ public class ArrowPuzzle : MonoBehaviour
         puzzleUI.SetActive(false);
 
         // Tell PuzzleTrigger the puzzle is over
-        PuzzleTrigger.isPuzzleActive = false;
+        ArrowPuzzleTrigger1.isPuzzleActive = false;
     }
 
     void PuzzleWin()
