@@ -27,9 +27,14 @@ public class PlayerController : MonoBehaviour
             movement = Vector2.zero;
             return;
         }
+        else if (ArrowPuzzleTrigger1.isPuzzleActive)
+        {
+            movement = Vector2.zero;
+            return;
+        }
 
-        // WASD / Arrow keys
-        movement.x = Input.GetAxisRaw("Horizontal");
+            // WASD / Arrow keys
+            movement.x = Input.GetAxisRaw("Horizontal");
         movement.y = Input.GetAxisRaw("Vertical");
         movement = movement.normalized; // keep diagonal speed consistent
     }

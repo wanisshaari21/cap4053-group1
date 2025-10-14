@@ -1,17 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement; //dont forget me!
+using UnityEngine.SceneManagement;
+
 public class SceneSwapper : MonoBehaviour
 {
-#pragma warning disable 0649 //private variables
     [SerializeField] private string sceneName;
-#pragma warning restore 0649
+
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        PlayerController player =
-        collision.gameObject.GetComponent<PlayerController>();
-        if (player)
-            SceneManager.LoadScene(sceneName);
+        if (collision.gameObject.GetComponent<PlayerController>())
+        {
+            if (SceneFader.Instance != null)
+            {
+                SceneFader.Instance.FadeToScene(sceneName);
+            }
+            else
+            {
+                Debug.LogWarning("No SceneFader found — loading directly!");
+                SceneManager.LoadScene(sceneName);
+            }
+
+        }
     }
 }
