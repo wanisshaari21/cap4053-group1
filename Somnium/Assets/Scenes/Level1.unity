@@ -60482,6 +60482,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 663230100}
     - target: {fileID: 1851656179016425086, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
+      propertyPath: speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1851656179016425086, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1575990865}
@@ -60495,11 +60499,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 5235862682234988381, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: m_LocalPosition.x
-      value: -7.5
+      value: -8.15
       objectReference: {fileID: 0}
     - target: {fileID: 5235862682234988381, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: m_LocalPosition.y
-      value: -11.4
+      value: -11.2
       objectReference: {fileID: 0}
     - target: {fileID: 5235862682234988381, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: m_LocalPosition.z
@@ -60537,6 +60541,14 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1575990865}
+    - target: {fileID: 5352764723555335273, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
+      propertyPath: chaseSpeed
+      value: 4
+      objectReference: {fileID: 0}
+    - target: {fileID: 5352764723555335273, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
+      propertyPath: patrolSpeed
+      value: 1.5
+      objectReference: {fileID: 0}
     - target: {fileID: 5352764723555335273, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: visionPivot
       value: 
