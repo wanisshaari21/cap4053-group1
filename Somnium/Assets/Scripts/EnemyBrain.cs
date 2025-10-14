@@ -1,165 +1,249 @@
-using System;
-using System.Collections;
-using System.Collections.Generic;
-using Unity.VisualScripting;
 using UnityEngine;
 
-// Possible enemy states
 public enum EnemyState { Patrol, Chase, Search }
 
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyBrain : MonoBehaviour {
-    [Header("Refs")]
-    public EnemyPatrol patrol; // The patrol script
-    public VisionCone fov; // The vision cone script
-    public Transform player; // Player transform
+public class EnemyBrain : MonoBehaviour
+{
+    public EnemyPatrol patrol;
+    public VisionCone fov;
+    public Transform player;
 
-    // Movement Speeds:
     [Header("Speeds")]
-    public float patrolSpeed = 3.5f; // Normal walking speed
-    public float chaseSpeed = 6.0f; // Faster chase speed
+    public float patrolSpeed = 3.5f;
+    public float chaseSpeed = 6.0f;
 
-    // Times controlling state transitions:
-    [Header("Timers")]
-    public float loseSightToSearchTime = 3f; // How long the enemy waits after losing sight before searching
-    public float searchDuration = 8f; // How long enemy searches before returning to patrol
+    [Header("State Timers")]
+    public float loseSightToSearchTime = 3f;
+    public float searchDuration = 8f;
 
-    // Debug:
-    [Header("Debug")]
-    public EnemyState state = EnemyState.Patrol;
+    [Header("Collision")]
+    public LayerMask obstacleMask;
 
-    // Internal variables
+    [Header("Vision Tracking")]
+    public Transform visionPivot;            // assign fov.transform or a child “head”
+    public float maxTurnDegPerSec = 360f;    // how fast the cone can turn
+
     private Rigidbody2D rb;
-    private Vector2 lastSeenPos; // Where player was last seen
-    private float lostTimer = 0f; // Counts down after losing sight
-    private float searchTimer = 0f; // Counts down while searching
+    private Vector2 lastSeenPos;
+    private float lostTimer = 0f;
+    private float searchTimer = 0f;
+    private Vector2 desiredVelocity;
+
+    public EnemyState state = EnemyState.Patrol;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
-
         if (!patrol) patrol = GetComponent<EnemyPatrol>();
         if (!fov) fov = GetComponent<VisionCone>();
+        if (!visionPivot) visionPivot = fov ? fov.transform : transform;
 
         EnterPatrol();
     }
 
     void Update()
     {
-        // Check if enemy currently sees the player
         bool canSeePlayer = (fov && player && fov.Detect(player));
-
-        // If enemy sees the player, switch to chase
         if (canSeePlayer)
         {
             lastSeenPos = player.position;
-            if (state != EnemyState.Chase)
-                EnterChase();
+            if (state != EnemyState.Chase) EnterChase();
         }
 
-        // Run logic depending on current state
         switch (state)
         {
             case EnemyState.Patrol: PatrolTick(); break;
             case EnemyState.Chase: ChaseTick(canSeePlayer); break;
             case EnemyState.Search: SearchTick(); break;
         }
+
+        UpdateVisionAim(canSeePlayer);
     }
 
-    // State Enter Functions:
+    void FixedUpdate()
+    {
+        if (desiredVelocity.sqrMagnitude > 1e-6f)
+            TryMove(desiredVelocity);
+        else
+            rb.velocity = Vector2.zero;
 
-    // Start patrolling
+        desiredVelocity = Vector2.zero;
+    }
+
+    // ---- States ----
     void EnterPatrol()
     {
         state = EnemyState.Patrol;
         if (patrol)
         {
-            patrol.enabled = true; // Re-enable patrol script
-            patrol.speed = patrolSpeed; // Make sure it moves at patrol speed 
-
+            patrol.enabled = true;
+            patrol.SetExternalMoveCallback(RequestMoveTowards, patrolSpeed); // route movement via physics
         }
+        rb.velocity = Vector2.zero;
     }
 
-    // Start chasing
     void EnterChase()
     {
         state = EnemyState.Chase;
-        if (patrol) patrol.enabled = false; // Disable patrol movements
-        lostTimer = loseSightToSearchTime; // Set timer for losing sight
+        if (patrol) patrol.enabled = false;
+        lostTimer = loseSightToSearchTime;
     }
 
-    // Start searching 
     void EnterSearch()
     {
         state = EnemyState.Search;
         searchTimer = searchDuration;
-        // Patrols stays disbabled until we return to patrol state  
+        rb.velocity = Vector2.zero;
     }
 
-    // State Update Functions:
-
-    // Called every frame while patrolling
     void PatrolTick()
     {
-        // EnemyPatrol Script handles movement automatically
-        // Nothing happens until enemmy sees player
+        // Patrol script calls RequestMoveTowards each frame via the callback.
     }
 
-    // Called every frame while chasing 
     void ChaseTick(bool canSeePlayer)
     {
-        if (player)
-        {
-            MoveTowards(player.position, chaseSpeed); // Move towards the player
-        }
+        if (!player) return;
+
+        // move directly toward player (no prediction/boost logic)
+        RequestMoveTowards(player.position, chaseSpeed);
+
         if (canSeePlayer)
         {
-            // Refresh timer if player still visible
             lostTimer = loseSightToSearchTime;
+            lastSeenPos = player.position;
         }
         else
         {
-            // Move to last seen position while timer counts down
-            MoveTowards(lastSeenPos, chaseSpeed);
+            // move to last seen while timer runs
+            RequestMoveTowards(lastSeenPos, chaseSpeed);
             lostTimer -= Time.deltaTime;
-            if (lostTimer <= 0f)
-            {
-                EnterSearch(); // Switch to Search when timer runs out
-            }
+            if (lostTimer <= 0f) EnterSearch();
         }
     }
 
-    // Called every frame while searching 
     void SearchTick()
     {
-        MoveTowards(lastSeenPos, patrolSpeed); // Hover near last seen spot
+        RequestMoveTowards(lastSeenPos, patrolSpeed);
         searchTimer -= Time.deltaTime;
-        if (searchTimer <= 0f)
-        {
-            EnterPatrol(); // Switch to Patrol when timer runs out
-        }
+        if (searchTimer <= 0f) EnterPatrol();
     }
 
-    // Helper Functions:
-
-    // Handles Rigidbody2D movement toward a target position
-    void MoveTowards(Vector2 target, float speed)
+    // ---- Helpers ----
+    void RequestMoveTowards(Vector2 target, float speed)
     {
-        Vector2 pos = rb.position;
-        Vector2 dir = (target - pos).normalized;
+        Vector2 dir = target - rb.position;
+        if (dir.sqrMagnitude > 1e-6f)
+            desiredVelocity = dir.normalized * speed;
 
-        rb.MovePosition(pos + dir * speed * Time.fixedDeltaTime);
-
-        // Flip sprite to face direction of motion
         if (Mathf.Abs(dir.x) > 0.01f)
         {
-            transform.localScale = new Vector3(MathF.Sign(dir.x) * Mathf.Abs(transform.localScale.x), transform.localScale.y, transform.localScale.z);
+            transform.localScale = new Vector3(
+                Mathf.Sign(dir.x) * Mathf.Abs(transform.localScale.x),
+                transform.localScale.y, transform.localScale.z);
+        }
+    }
+
+    void UpdateVisionAim(bool seeingPlayer)
+    {
+        Vector2 aimDir;
+
+        // 1) If chasing: aim at player while visible; otherwise aim at last seen
+        if (state == EnemyState.Chase && (seeingPlayer || lostTimer > 0f))
+        {
+            Vector2 lookPos = seeingPlayer && player
+                ? (Vector2)player.position
+                : lastSeenPos;
+
+            aimDir = (lookPos - (Vector2)visionPivot.position);
+            if (aimDir.sqrMagnitude < 1e-8f) aimDir = visionPivot.right; // degenerate safety
+            else aimDir.Normalize();
+        }
+        else
+        {
+            // 2) Not chasing (Patrol/Search): aim in movement direction; if nearly idle, aim toward patrol waypoint
+            if (rb.velocity.sqrMagnitude > 1e-4f)
+            {
+                aimDir = rb.velocity.normalized;
+            }
+            else
+            {
+                // If we're waiting at a point, face where we intend to go next (patrol target)
+                if (patrol != null && patrol.CurrentTarget.HasValue)
+                {
+                    Vector2 toNext = patrol.CurrentTarget.Value - (Vector2)visionPivot.position;
+                    aimDir = toNext.sqrMagnitude > 1e-8f ? toNext.normalized : (Vector2)visionPivot.right;
+                }
+                else
+                {
+                    aimDir = (Vector2)visionPivot.right; // default
+                }
+            }
         }
 
-        float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-        transform.rotation = Quaternion.Euler(0, 0, angle);
+        float targetAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
+        float current = visionPivot.eulerAngles.z;
+        float maxStep = maxTurnDegPerSec * Time.deltaTime;
+        float next = Mathf.MoveTowardsAngle(current, targetAngle, maxStep);
+        visionPivot.rotation = Quaternion.Euler(0, 0, next);
     }
 
 
-    
+    void TryMove(Vector2 velocity)
+    {
+        float dt = Time.fixedDeltaTime;
+        Vector2 remaining = velocity * dt;
+        int iterations = 2;
+        float skin = 0.01f;
+
+        for (int i = 0; i < iterations; i++)
+        {
+            if (remaining.sqrMagnitude < 1e-10f) break;
+
+            Vector2 dir = remaining.normalized;
+            float len = remaining.magnitude;
+
+            var hits = new RaycastHit2D[6];
+            var filter = new ContactFilter2D { useTriggers = false };
+            filter.SetLayerMask(obstacleMask);
+
+            int count = rb.Cast(dir, filter, hits, len + skin);
+            if (count == 0)
+            {
+                rb.MovePosition(rb.position + remaining);
+                remaining = Vector2.zero;
+                break;
+            }
+
+            // closest hit  (BUGFIX: use j, not i)
+            float minDist = Mathf.Infinity;
+            int minIdx = -1;
+            for (int j = 0; j < count; j++)
+            {
+                if (hits[j].distance < minDist)
+                {
+                    minDist = hits[j].distance;
+                    minIdx = j;
+                }
+            }
+
+            float allowed = Mathf.Max(0f, minDist - skin);
+            if (allowed > 0f) rb.MovePosition(rb.position + dir * allowed);
+
+            if (minIdx >= 0)
+            {
+                Vector2 n = hits[minIdx].normal;
+                remaining = dir * (len - allowed);
+                remaining -= Vector2.Dot(remaining, n) * n; // slide along tangent
+            }
+            else
+            {
+                remaining = Vector2.zero;
+                break;
+            }
+        }
+
+        rb.velocity = velocity; // good for anim/knockback blends
+    }
 }
