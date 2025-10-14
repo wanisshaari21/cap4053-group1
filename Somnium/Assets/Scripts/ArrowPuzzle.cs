@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 using TMPro;
+using System.Collections;
 
 public class ArrowPuzzle : MonoBehaviour
 {
@@ -15,6 +16,20 @@ public class ArrowPuzzle : MonoBehaviour
     public PuzzleManager puzzleManager; // assign in Inspector
     public PuzzleTrigger puzzleTrigger;
 
+    [Header("Key Feedback")]
+    public Transform upSpawn, downSpawn, leftSpawn, rightSpawn;  // UI empty objects in Canvas
+    public GameObject arrowPrefab; // small arrow image prefab
+    private GameObject currentArrow; // new
+
+    [Header("Timer Settings")]
+    public float puzzleTime = 10f; // seconds to solve puzzle
+    private float timeRemaining;
+    private bool timerRunning = false;
+
+    [Header("Wave Settings")]
+    public int totalWaves = 4; // how many waves total
+    private int currentWave = 0;
+
     void Start()
     {
         puzzleUI.SetActive(false);
@@ -22,13 +37,29 @@ public class ArrowPuzzle : MonoBehaviour
 
     public void StartPuzzle()
     {
+        currentWave = 0;
+        StartNextWave();
+    }
+
+    void StartNextWave()
+    {
+        // Cancel any pending delayed actions (prevents overlap bugs)
+        CancelInvoke("HideArrows");
+
         currentIndex = 0;
-        feedbackText.text = "New text";
+        feedbackText.text = $"Wave {currentWave + 1}/{totalWaves}";
         puzzleUI.SetActive(true);
         puzzleActive = true;
         GenerateSequence();
         ShowArrows();
-        Invoke("HideArrows", 2f); // Hide after 2 seconds for memory challenge
+        Invoke("HideArrows", 5f); // time to memorize before they vanish
+        StartTimer();
+    }
+
+    void StartTimer()
+    {
+        timeRemaining = puzzleTime;
+        timerRunning = true;
     }
 
     public void EndPuzzle()
@@ -41,6 +72,20 @@ public class ArrowPuzzle : MonoBehaviour
     {
         if (!puzzleActive) return;
 
+        // Countdown timer
+        if (timerRunning)
+        {
+            timeRemaining -= Time.deltaTime;
+            feedbackText.text = $"{currentWave + 1}/{totalWaves}\nTime: {Mathf.Ceil(timeRemaining)}";
+
+            if (timeRemaining <= 0f)
+            {
+                timerRunning = false;
+                PuzzleFail();
+                return;
+            }
+        }
+
         KeyCode pressedKey = KeyCode.None;
 
         // Detect only WASD keys
@@ -52,6 +97,12 @@ public class ArrowPuzzle : MonoBehaviour
         // If a WASD key was pressed, check it
         if (pressedKey != KeyCode.None)
         {
+            // Hide the puzzle arrows immediately
+            HideArrows();
+
+            // Spawn a visual arrow for pressed key
+            SpawnPressedArrow(pressedKey);
+
             Debug.Log($"Key Pressed: {pressedKey}");
 
             if (pressedKey == correctSequence[currentIndex])
@@ -60,14 +111,78 @@ public class ArrowPuzzle : MonoBehaviour
                 currentIndex++;
                 if (currentIndex >= correctSequence.Length)
                 {
-                    PuzzleWin();
+                    timerRunning = false; // stop timer
+                    currentWave++;
+                    if (currentWave < totalWaves)
+                    {
+                        // Not done yet — go to next wave after short delay
+                        StartCoroutine(NextWaveAfterDelay(1f));
+                    }
+                    else
+                    {
+                        // All waves cleared!
+                        PuzzleWin();
+                    }
                 }
             }
             else
             {
+                timerRunning = false; // stop timer
                 Debug.Log($"Wrong! Expected {correctSequence[currentIndex]}.");
                 PuzzleFail();
             }
+        }
+    }
+
+    IEnumerator NextWaveAfterDelay(float delay)
+    {
+        feedbackText.text = "Next wave...";
+        yield return new WaitForSeconds(delay);
+        StartNextWave();
+    }
+
+    void SpawnPressedArrow(KeyCode key)
+    {
+        Transform spawnPoint = null;
+        Sprite sprite = null;
+
+        switch (key)
+        {
+            case KeyCode.W:
+                spawnPoint = upSpawn;
+                sprite = upArrow;
+                break;
+            case KeyCode.S:
+                spawnPoint = downSpawn;
+                sprite = downArrow;
+                break;
+            case KeyCode.A:
+                spawnPoint = leftSpawn;
+                sprite = leftArrow;
+                break;
+            case KeyCode.D:
+                spawnPoint = rightSpawn;
+                sprite = rightArrow;
+                break;
+        }
+
+        if (spawnPoint != null && arrowPrefab != null)
+        {
+            // Destroy previous arrow if it exists
+            if (currentArrow != null)
+            {
+                Destroy(currentArrow);
+            }
+
+            currentArrow = Instantiate(arrowPrefab, spawnPoint);
+            currentArrow.GetComponent<Image>().sprite = sprite;
+
+            // Offset from parent (in local pixels)
+            RectTransform rt = currentArrow.GetComponent<RectTransform>();
+            rt.anchoredPosition = new Vector2(750f, 0f); // adjust as needed
+
+            // Optional: destroy automatically after short time
+            Destroy(currentArrow, 0.5f);
         }
     }
 
@@ -109,7 +224,10 @@ public class ArrowPuzzle : MonoBehaviour
     void ShowArrows()
     {
         foreach (var arrow in arrowSlots)
+        {
             arrow.enabled = true;
+            arrow.color = Color.yellow; // tint to yellow
+        }
     }
 
     void HideArrows()
@@ -118,16 +236,29 @@ public class ArrowPuzzle : MonoBehaviour
             arrow.enabled = false;
     }
 
+    private IEnumerator EndPuzzleAfterDelay(float delay)
+    {
+        // Keep blocking movement during the delay
+        yield return new WaitForSeconds(delay);
+
+        // Now hide the UI and unblock the player
+        puzzleUI.SetActive(false);
+
+        // Tell PuzzleTrigger the puzzle is over
+        PuzzleTrigger.isPuzzleActive = false;
+    }
+
     void PuzzleWin()
     {
         feedbackText.text = "Success!";
         puzzleActive = false;
 
         if (puzzleManager != null)
-            puzzleManager.PuzzleCompleted(); // notify manager
-                                             // TODO: call back to PuzzleTrigger to close puzzle
+            puzzleManager.PuzzleCompleted();
         if (puzzleTrigger != null)
             puzzleTrigger.PuzzleCompleted();
+
+        StartCoroutine(EndPuzzleAfterDelay(2f));
     }
 
     void PuzzleFail()
@@ -135,5 +266,7 @@ public class ArrowPuzzle : MonoBehaviour
         feedbackText.text = "Failed!";
         puzzleActive = false;
         // TODO: subtract time / penalty
+        // Hide puzzle UI automatically after 2 seconds
+        StartCoroutine(EndPuzzleAfterDelay(2f));
     }
 }
