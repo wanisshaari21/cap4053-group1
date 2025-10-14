@@ -6,7 +6,7 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/SampleScene.unity
+    path: Assets/Scenes/Level1.unity
     guid: 8c9cfa26abfee488c85f1582747f6a02
   - enabled: 1
     path: Assets/Scenes/Puzzles/Tutorial Puzzle/TutorialPuzzle.unity
@@ -17,4 +17,7 @@ EditorBuildSettings:
   - enabled: 1
     path: Assets/Scenes/WinScene.unity
     guid: b192baaed3f9b9a4d838849f681aedea
+  - enabled: 1
+    path: Assets/Scenes/InstructionsScene.unity
+    guid: 097471de2311e704aa11a874e796356c
   m_configObjects: {}
