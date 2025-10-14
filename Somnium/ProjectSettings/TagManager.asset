@@ -72,3 +72,6 @@ TagManager:
   - name: Enemies
     uniqueID: 2141854715
     locked: 0
+  - name: TemporaryTiles
+    uniqueID: 875529995
+    locked: 0
