@@ -4097,7 +4097,10 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
-    m_AddedGameObjects: []
+    m_AddedGameObjects:
+    - targetCorrespondingSourceObject: {fileID: 6404949437664711587, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1061406125}
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 6404949437664711584, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
       insertIndex: -1
@@ -4108,6 +4111,9 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6404949437664711584, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
       insertIndex: -1
       addedObject: {fileID: 1575990862}
+    - targetCorrespondingSourceObject: {fileID: 6404949437664711584, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1575990866}
   m_SourcePrefab: {fileID: 100100000, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
 --- !u!1001 &605583531
 PrefabInstance:
@@ -49048,6 +49054,88 @@ Transform:
   - {fileID: 290237581}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1061406124
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1061406125}
+  - component: {fileID: 1061406126}
+  m_Layer: 6
+  m_Name: Character 2D Light
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1061406125
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061406124}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 1575990865}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1061406126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1061406124}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 073797afb82c5a1438f328866b10b3f0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_ComponentVersion: 1
+  m_LightType: 3
+  m_BlendStyleIndex: 0
+  m_FalloffIntensity: 0.5
+  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Intensity: 0.5
+  m_LightVolumeIntensity: 1
+  m_LightVolumeIntensityEnabled: 0
+  m_ApplyToSortingLayers: 00000000e32944a93313bf37fdd2b7a32bf734d4ef48d39febcbc74a37b2f87efb1baa7f83ba04bcf91a575f
+  m_LightCookieSprite: {fileID: 0}
+  m_DeprecatedPointLightCookieSprite: {fileID: 0}
+  m_LightOrder: 0
+  m_AlphaBlendOnOverlap: 0
+  m_OverlapOperation: 0
+  m_NormalMapDistance: 3
+  m_NormalMapQuality: 2
+  m_UseNormalMap: 0
+  m_ShadowIntensityEnabled: 1
+  m_ShadowIntensity: 0.75
+  m_ShadowVolumeIntensityEnabled: 0
+  m_ShadowVolumeIntensity: 0.75
+  m_LocalBounds:
+    m_Center: {x: 0, y: -0.00000011920929, z: 0}
+    m_Extent: {x: 0.9985302, y: 0.99853027, z: 0}
+  m_PointLightInnerAngle: 360
+  m_PointLightOuterAngle: 360
+  m_PointLightInnerRadius: 1
+  m_PointLightOuterRadius: 2
+  m_ShapeLightParametricSides: 5
+  m_ShapeLightParametricAngleOffset: 0
+  m_ShapeLightParametricRadius: 1
+  m_ShapeLightFalloffSize: 0.5
+  m_ShapeLightFalloffOffset: {x: 0, y: 0}
+  m_ShapePath:
+  - {x: -0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: -0.5, z: 0}
+  - {x: 0.5, y: 0.5, z: 0}
+  - {x: -0.5, y: 0.5, z: 0}
 --- !u!1 &1103326606
 GameObject:
   m_ObjectHideFlags: 0
@@ -58148,6 +58236,22 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 6404949437664711587, guid: b8ce4a6200b44dfaae185d7347ed4cc2, type: 3}
   m_PrefabInstance: {fileID: 568864951}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1575990866
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1575990861}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 941668bd0f2bb8e41a7cef1dc40f277a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  visionLight: {fileID: 1061406126}
+  normalOuterRadius: 2
+  boostedOuterRadius: 3
+  lerpSpeed: 10
 --- !u!1 &1610045281
 GameObject:
   m_ObjectHideFlags: 0
