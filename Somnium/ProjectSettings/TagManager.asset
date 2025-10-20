@@ -75,6 +75,3 @@ TagManager:
   - name: TemporaryTiles
     uniqueID: 875529995
     locked: 0
-  - name: WallsButYouCanWalkThroughThem
-    uniqueID: 3599668143
-    locked: 0
