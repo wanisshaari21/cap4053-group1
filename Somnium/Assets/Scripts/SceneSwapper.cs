@@ -1,18 +1,24 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.SceneManagement; //dont forget me!
+using UnityEngine.SceneManagement;
+
 public class SceneSwapper : MonoBehaviour
 {
     [SerializeField] private string sceneName;
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        // ⬇ NEW: block scene changes while puzzle UI is up
-        if (PuzzleTrigger.isPuzzleActive) return;
+        if (collision.gameObject.GetComponent<PlayerController>())
+        {
+            if (SceneFader.Instance != null)
+            {
+                SceneFader.Instance.FadeToScene(sceneName);
+            }
+            else
+            {
+                Debug.LogWarning("No SceneFader found — loading directly!");
+                SceneManager.LoadScene(sceneName);
+            }
 
-        var player = collision.GetComponent<PlayerController>();
-        if (player)
-            SceneManager.LoadScene(sceneName);
+        }
     }
 }
