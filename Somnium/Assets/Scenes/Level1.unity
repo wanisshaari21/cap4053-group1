@@ -47531,6 +47531,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 711478330626676106, guid: 9c612021b0fabea4d8201bf581c67434, type: 3}
+      propertyPath: orthographic size
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 7281913508023315365, guid: 9c612021b0fabea4d8201bf581c67434, type: 3}
       propertyPath: m_LocalPosition.x
       value: 5.225487
@@ -58133,7 +58137,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 2130227767
-  m_SortingLayer: 9
+  m_SortingLayer: 7
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -59348,7 +59352,7 @@ TilemapRenderer:
   m_AutoUVMaxAngle: 89
   m_LightmapParameters: {fileID: 0}
   m_SortingLayerID: 1254607851
-  m_SortingLayer: 8
+  m_SortingLayer: 9
   m_SortingOrder: 0
   m_ChunkSize: {x: 32, y: 32, z: 32}
   m_ChunkCullingBounds: {x: 0, y: 0, z: 0}
@@ -60395,6 +60399,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 663230100}
     - target: {fileID: 1851656179016425086, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
+      propertyPath: speed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 1851656179016425086, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: player
       value: 
       objectReference: {fileID: 1097522440}
@@ -60450,6 +60458,10 @@ PrefabInstance:
       propertyPath: player
       value: 
       objectReference: {fileID: 1097522440}
+    - target: {fileID: 5352764723555335273, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
+      propertyPath: chaseSpeed
+      value: 4
+      objectReference: {fileID: 0}
     - target: {fileID: 5352764723555335273, guid: 527494ef5350545b2a476f6ed1a23c9c, type: 3}
       propertyPath: visionPivot
       value: 

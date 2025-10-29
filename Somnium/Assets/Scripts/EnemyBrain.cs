@@ -1,4 +1,5 @@
 using UnityEngine;
+using UnityEngine.AI;
 
 public enum EnemyState { Patrol, Chase, Search }
 
@@ -8,6 +9,7 @@ public class EnemyBrain : MonoBehaviour
     public EnemyPatrol patrol;
     public VisionCone fov;
     public Transform player;
+    public NavMeshAgent agent;
 
     [Header("Speeds")]
     public float patrolSpeed = 3.5f;
@@ -17,30 +19,47 @@ public class EnemyBrain : MonoBehaviour
     public float loseSightToSearchTime = 3f;
     public float searchDuration = 8f;
 
-    [Header("Collision")]
-    public LayerMask obstacleMask;
-
     [Header("Vision Tracking")]
-    public Transform visionPivot;            // assign fov.transform or a child “head”
-    public float maxTurnDegPerSec = 360f;    // how fast the cone can turn
+    public Transform visionPivot; // assign fov.transform or a child “head”
+    public float maxTurnDegPerSec = 360f; // how fast the cone can turn
 
     private Rigidbody2D rb;
     private Vector2 lastSeenPos;
     private float lostTimer = 0f;
     private float searchTimer = 0f;
-    private Vector2 desiredVelocity;
 
     public EnemyState state = EnemyState.Patrol;
 
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+
+        if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!patrol) patrol = GetComponent<EnemyPatrol>();
         if (!fov) fov = GetComponent<VisionCone>();
-        if (!visionPivot) visionPivot = fov ? fov.transform : transform;
+
+        if (patrol != null)
+            patrol.SetExternalMoveCallback(MoveToTarget, patrolSpeed);
+
+        // Prevent NavMeshAgent from auto-rotating in 2D
+        if (agent)
+        {
+            agent.updateRotation = false;
+            agent.updateUpAxis = false;
+        }
 
         EnterPatrol();
     }
+
+    void Start()
+    {
+        // Only enter patrol if agent is on NavMesh
+        if (agent && agent.isOnNavMesh)
+            EnterPatrol();
+        else
+            Debug.LogWarning($"{name} NavMeshAgent is not on NavMesh at start!");
+    }
+
 
     void Update()
     {
@@ -61,87 +80,85 @@ public class EnemyBrain : MonoBehaviour
         UpdateVisionAim(canSeePlayer);
     }
 
-    void FixedUpdate()
-    {
-        if (desiredVelocity.sqrMagnitude > 1e-6f)
-            TryMove(desiredVelocity);
-        else
-            rb.velocity = Vector2.zero;
-
-        desiredVelocity = Vector2.zero;
-    }
-
     // ---- States ----
     void EnterPatrol()
     {
         state = EnemyState.Patrol;
-        if (patrol)
+        if (patrol) patrol.enabled = true;
+        if (agent && agent.isOnNavMesh)
         {
-            patrol.enabled = true;
-            patrol.SetExternalMoveCallback(RequestMoveTowards, patrolSpeed); // route movement via physics
+            agent.isStopped = false;
+            agent.speed = patrolSpeed;
         }
-        rb.velocity = Vector2.zero;
     }
+
 
     void EnterChase()
     {
         state = EnemyState.Chase;
         if (patrol) patrol.enabled = false;
         lostTimer = loseSightToSearchTime;
+
+        if (agent && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+            agent.speed = chaseSpeed;
+        }
     }
 
     void EnterSearch()
     {
         state = EnemyState.Search;
         searchTimer = searchDuration;
-        rb.velocity = Vector2.zero;
-    }
 
-    void PatrolTick()
-    {
-        // Patrol script calls RequestMoveTowards each frame via the callback.
+        if (agent && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+            agent.speed = patrolSpeed;
+        }
     }
 
     void ChaseTick(bool canSeePlayer)
     {
         if (!player) return;
 
-        // move directly toward player (no prediction/boost logic)
-        RequestMoveTowards(player.position, chaseSpeed);
-
+        Vector2 targetPos = lastSeenPos;
         if (canSeePlayer)
         {
+            targetPos = player.position;
+            lastSeenPos = targetPos;
             lostTimer = loseSightToSearchTime;
-            lastSeenPos = player.position;
         }
         else
         {
-            // move to last seen while timer runs
-            RequestMoveTowards(lastSeenPos, chaseSpeed);
             lostTimer -= Time.deltaTime;
             if (lostTimer <= 0f) EnterSearch();
         }
+
+        MoveToTarget(targetPos, chaseSpeed);
+    }
+
+    void PatrolTick()
+    {
+        // Patrol sets agent destination via MoveToTarget callback
+        if (patrol && patrol.CurrentTarget.HasValue)
+            MoveToTarget(patrol.CurrentTarget.Value, patrolSpeed);
     }
 
     void SearchTick()
     {
-        RequestMoveTowards(lastSeenPos, patrolSpeed);
+        MoveToTarget(lastSeenPos, patrolSpeed); // <-- use NavMeshAgent2D
         searchTimer -= Time.deltaTime;
         if (searchTimer <= 0f) EnterPatrol();
     }
 
-    // ---- Helpers ----
-    void RequestMoveTowards(Vector2 target, float speed)
+    // Callback used by Patrol script and FSM for movement
+    void MoveToTarget(Vector2 target, float speed)
     {
-        Vector2 dir = target - rb.position;
-        if (dir.sqrMagnitude > 1e-6f)
-            desiredVelocity = dir.normalized * speed;
-
-        if (Mathf.Abs(dir.x) > 0.01f)
+        if (agent)
         {
-            transform.localScale = new Vector3(
-                Mathf.Sign(dir.x) * Mathf.Abs(transform.localScale.x),
-                transform.localScale.y, transform.localScale.z);
+            agent.SetDestination(target);
+            agent.speed = speed;
         }
     }
 
@@ -163,9 +180,9 @@ public class EnemyBrain : MonoBehaviour
         else
         {
             // 2) Not chasing (Patrol/Search): aim in movement direction; if nearly idle, aim toward patrol waypoint
-            if (rb.velocity.sqrMagnitude > 1e-4f)
+            if (agent.velocity.sqrMagnitude > 1e-4f)
             {
-                aimDir = rb.velocity.normalized;
+                aimDir = agent.velocity.normalized;
             }
             else
             {
@@ -187,63 +204,5 @@ public class EnemyBrain : MonoBehaviour
         float maxStep = maxTurnDegPerSec * Time.deltaTime;
         float next = Mathf.MoveTowardsAngle(current, targetAngle, maxStep);
         visionPivot.rotation = Quaternion.Euler(0, 0, next);
-    }
-
-
-    void TryMove(Vector2 velocity)
-    {
-        float dt = Time.fixedDeltaTime;
-        Vector2 remaining = velocity * dt;
-        int iterations = 2;
-        float skin = 0.01f;
-
-        for (int i = 0; i < iterations; i++)
-        {
-            if (remaining.sqrMagnitude < 1e-10f) break;
-
-            Vector2 dir = remaining.normalized;
-            float len = remaining.magnitude;
-
-            var hits = new RaycastHit2D[6];
-            var filter = new ContactFilter2D { useTriggers = false };
-            filter.SetLayerMask(obstacleMask);
-
-            int count = rb.Cast(dir, filter, hits, len + skin);
-            if (count == 0)
-            {
-                rb.MovePosition(rb.position + remaining);
-                remaining = Vector2.zero;
-                break;
-            }
-
-            // closest hit  (BUGFIX: use j, not i)
-            float minDist = Mathf.Infinity;
-            int minIdx = -1;
-            for (int j = 0; j < count; j++)
-            {
-                if (hits[j].distance < minDist)
-                {
-                    minDist = hits[j].distance;
-                    minIdx = j;
-                }
-            }
-
-            float allowed = Mathf.Max(0f, minDist - skin);
-            if (allowed > 0f) rb.MovePosition(rb.position + dir * allowed);
-
-            if (minIdx >= 0)
-            {
-                Vector2 n = hits[minIdx].normal;
-                remaining = dir * (len - allowed);
-                remaining -= Vector2.Dot(remaining, n) * n; // slide along tangent
-            }
-            else
-            {
-                remaining = Vector2.zero;
-                break;
-            }
-        }
-
-        rb.velocity = velocity; // good for anim/knockback blends
     }
 }
