@@ -92,10 +92,10 @@ public class NormalArrowPuzzle : MonoBehaviour
         KeyCode pressedKey = KeyCode.None;
 
         // Detect only WASD keys
-        if (Input.GetKeyDown(KeyCode.W)) pressedKey = KeyCode.W;
-        else if (Input.GetKeyDown(KeyCode.A)) pressedKey = KeyCode.A;
-        else if (Input.GetKeyDown(KeyCode.S)) pressedKey = KeyCode.S;
-        else if (Input.GetKeyDown(KeyCode.D)) pressedKey = KeyCode.D;
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) pressedKey = KeyCode.W;
+        else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) pressedKey = KeyCode.A;
+        else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) pressedKey = KeyCode.S;
+        else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) pressedKey = KeyCode.D;
 
         // If a WASD key was pressed, check it
         if (pressedKey != KeyCode.None)
