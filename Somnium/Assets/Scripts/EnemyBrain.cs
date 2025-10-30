@@ -1,7 +1,7 @@
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState { Patrol, Chase, Search }
+public enum EnemyState { Patrol, Chase, Search, GoToPuzzle }
 
 [RequireComponent(typeof(Rigidbody2D))]
 public class EnemyBrain : MonoBehaviour
@@ -27,6 +27,10 @@ public class EnemyBrain : MonoBehaviour
     private Vector2 lastSeenPos;
     private float lostTimer = 0f;
     private float searchTimer = 0f;
+
+    public Transform puzzlePosition; // assign the puzzle GameObject in Inspector
+    private float puzzleTimer = 0f;
+    public float maxPuzzleTime = 10f; // seconds
 
     public EnemyState state = EnemyState.Patrol;
 
@@ -75,12 +79,65 @@ public class EnemyBrain : MonoBehaviour
             case EnemyState.Patrol: PatrolTick(); break;
             case EnemyState.Chase: ChaseTick(canSeePlayer); break;
             case EnemyState.Search: SearchTick(); break;
+            case EnemyState.GoToPuzzle: GoToPuzzleTick(); break;
         }
 
         UpdateVisionAim(canSeePlayer);
     }
 
+    void OnDrawGizmos()
+    {
+        if (agent != null)
+        {
+            Gizmos.color = Color.red;
+            Gizmos.DrawSphere(agent.destination, 0.2f);
+        }
+
+        if (puzzlePosition != null)
+        {
+            Gizmos.color = Color.green;
+            Gizmos.DrawSphere(puzzlePosition.position, 0.2f);
+        }
+    }
+
+    void GoToPuzzleTick()
+    {
+        if (!puzzlePosition) return;
+
+        agent.SetDestination(puzzlePosition.position);
+        puzzleTimer += Time.deltaTime;
+
+        // Only leave this state when actually close enough
+        float distance = Vector3.Distance(transform.position, puzzlePosition.position);
+        if (distance < 0.5f) // adjust threshold as needed
+        {
+            Debug.Log("[Enemy] Reached puzzle. Switching to Patrol.");
+            EnterPatrol(); // resume normal FSM
+        }
+        else if (puzzleTimer >= maxPuzzleTime)
+        {
+            Debug.Log("[Enemy] Puzzle failsafe triggered. Returning to Patrol.");
+            EnterPatrol();
+        }
+    }
+
     // ---- States ----
+    public void EnterGoToPuzzle(Transform puzzle)
+    {
+        if (puzzlePosition == null)
+        {
+            Debug.LogWarning($"{name}: Puzzle position not assigned!");
+            return;
+        }
+        puzzlePosition = puzzle;
+        state = EnemyState.GoToPuzzle;
+        if (patrol) patrol.enabled = false; // ❌ Disable patrol updates
+        agent.SetDestination(puzzlePosition.position);
+        agent.speed = chaseSpeed;
+        puzzleTimer = 0f; // reset failsafe timer
+        Debug.Log($"{name}: Moving to puzzle at {puzzlePosition.position}");
+    }
+
     void EnterPatrol()
     {
         state = EnemyState.Patrol;
@@ -109,6 +166,7 @@ public class EnemyBrain : MonoBehaviour
     void EnterSearch()
     {
         state = EnemyState.Search;
+        if (patrol) patrol.enabled = false;
         searchTimer = searchDuration;
 
         if (agent && agent.isOnNavMesh)
@@ -117,26 +175,35 @@ public class EnemyBrain : MonoBehaviour
             agent.speed = patrolSpeed;
         }
     }
-
     void ChaseTick(bool canSeePlayer)
     {
         if (!player) return;
 
-        Vector2 targetPos = lastSeenPos;
+        Vector2 targetPos = player.position; // always chase the player’s current position
+
         if (canSeePlayer)
         {
-            targetPos = player.position;
             lastSeenPos = targetPos;
-            lostTimer = loseSightToSearchTime;
+            lostTimer = loseSightToSearchTime; // reset timer while player visible
+            Debug.Log($"[Chase] Player visible. Reset lostTimer to {lostTimer}");
         }
         else
         {
             lostTimer -= Time.deltaTime;
-            if (lostTimer <= 0f) EnterSearch();
+            Debug.Log($"[Chase] Player not visible. Countdown: {lostTimer:F2} seconds");
+
+            if (lostTimer <= 0f)
+            {
+                Debug.Log("[Chase] Lost timer expired. Entering Search state.");
+                EnterSearch();
+                return; // stop chasing after countdown ends
+            }
         }
 
+        // Keep moving toward the player during countdown
         MoveToTarget(targetPos, chaseSpeed);
     }
+
 
     void PatrolTick()
     {
@@ -179,25 +246,28 @@ public class EnemyBrain : MonoBehaviour
         }
         else
         {
-            // 2) Not chasing (Patrol/Search): aim in movement direction; if nearly idle, aim toward patrol waypoint
             if (agent.velocity.sqrMagnitude > 1e-4f)
             {
                 aimDir = agent.velocity.normalized;
             }
             else
             {
-                // If we're waiting at a point, face where we intend to go next (patrol target)
+                // Use patrol target if available
                 if (patrol != null && patrol.CurrentTarget.HasValue)
                 {
                     Vector2 toNext = patrol.CurrentTarget.Value - (Vector2)visionPivot.position;
-                    aimDir = toNext.sqrMagnitude > 1e-8f ? toNext.normalized : (Vector2)visionPivot.right;
+                    aimDir = toNext.sqrMagnitude > 1e-8f ? toNext.normalized : (Vector2)lastSeenPos - (Vector2)visionPivot.position;
                 }
                 else
                 {
-                    aimDir = (Vector2)visionPivot.right; // default
+                    // fallback to last seen position if not moving
+                    Vector2 toTarget = lastSeenPos - (Vector2)visionPivot.position;
+                    aimDir = toTarget.sqrMagnitude > 1e-6f ? toTarget.normalized : visionPivot.right;
                 }
             }
         }
+
+
 
         float targetAngle = Mathf.Atan2(aimDir.y, aimDir.x) * Mathf.Rad2Deg;
         float current = visionPivot.eulerAngles.z;

@@ -30,6 +30,9 @@ public class ArrowPuzzle : MonoBehaviour
     public int totalWaves = 4; // how many waves total
     private int currentWave = 0;
 
+    public EnemyBrain enemy;
+    public Transform puzzleMarker;
+
     void Start()
     {
         puzzleUI.SetActive(false);
@@ -266,6 +269,16 @@ public class ArrowPuzzle : MonoBehaviour
         feedbackText.text = "Failed!";
         puzzleActive = false;
         // TODO: subtract time / penalty
+        // Enemy goes to puzzle
+        if (enemy != null)
+        {
+            Debug.Log("ArrowPuzzle: telling enemy to go to puzzle");
+            enemy.EnterGoToPuzzle(puzzleMarker);
+        }
+        else
+        {
+            Debug.LogWarning("ArrowPuzzle: Enemy reference not assigned!");
+        }
         // Hide puzzle UI automatically after 2 seconds
         StartCoroutine(EndPuzzleAfterDelay(2f));
     }
