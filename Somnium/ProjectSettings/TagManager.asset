@@ -3,19 +3,14 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags:
-  - Enemy
+  tags: []
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - Enemies
+  - 
   - Water
   - UI
-  - Character
-  - Obstacles
-  - Player
-  - EnemyTriggers
   - 
   - 
   - 
@@ -29,6 +24,10 @@ TagManager:
   - 
   - 
   - 
+  - 
+  - Layer 1
+  - Layer 2
+  - Layer 3
   - 
   - 
   - 
@@ -42,36 +41,21 @@ TagManager:
   - name: Default
     uniqueID: 0
     locked: 0
+  - name: Layer 1
+    uniqueID: 2425651459
+    locked: 0
+  - name: Layer 2
+    uniqueID: 4250941897
+    locked: 0
+  - name: Layer 3
+    uniqueID: 4189426099
+    locked: 0
   - name: Ground
-    uniqueID: 3154426499
-    locked: 0
-  - name: Gate
-    uniqueID: 1599544057
-    locked: 0
-  - name: Background Walls
-    uniqueID: 2839816675
-    locked: 0
-  - name: WallsUnderWalls
-    uniqueID: 935269171
+    uniqueID: 1251345479
     locked: 0
   - name: Walls
-    uniqueID: 2746733309
+    uniqueID: 3369605981
     locked: 0
-  - name: WallsOnTopOfWalls
-    uniqueID: 3560240939
-    locked: 0
-  - name: Character
-    uniqueID: 2681424111
-    locked: 0
-  - name: Door
-    uniqueID: 1254607851
-    locked: 0
-  - name: WalkableWalls
-    uniqueID: 2130227767
-    locked: 0
-  - name: Enemies
-    uniqueID: 2141854715
-    locked: 0
-  - name: TemporaryTiles
-    uniqueID: 875529995
+  - name: Player
+    uniqueID: 2622520173
     locked: 0
