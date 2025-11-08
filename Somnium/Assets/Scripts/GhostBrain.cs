@@ -1,10 +1,8 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState { Patrol, Chase, Search, GoToPuzzle }
-
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyBrain : MonoBehaviour
+public class GhostBrain : MonoBehaviour
 {
     public EnemyPatrol patrol;
     public VisionCone fov;
@@ -34,9 +32,23 @@ public class EnemyBrain : MonoBehaviour
 
     public EnemyState state = EnemyState.Patrol;
 
+    [Header("Ghost Phase Settings")]
+    public float phaseDistance = 10f;       // start phasing if player this far away
+    public float phaseSpeed = 8f;           // how fast ghost moves when phasing
+    public float unphaseBuffer = 1.5f;      // distance threshold to safely unphase
+
+    private bool isPhasing = false;
+    private bool isInsideObstacle = false;  // detected using trigger checks
+
+    private float lastDebugDist = -1f;
+    private bool lastPhaseState = false;
+    private Collider2D col;
+
+
     void Awake()
     {
         rb = GetComponent<Rigidbody2D>();
+        col = GetComponent<Collider2D>();
 
         if (!agent) agent = GetComponent<NavMeshAgent>();
         if (!patrol) patrol = GetComponent<EnemyPatrol>();
@@ -98,6 +110,18 @@ public class EnemyBrain : MonoBehaviour
             Gizmos.color = Color.green;
             Gizmos.DrawSphere(puzzlePosition.position, 0.2f);
         }
+    }
+
+    void OnTriggerEnter2D(Collider2D col)
+    {
+        if (col.CompareTag("Wall"))
+            isInsideObstacle = true;
+    }
+
+    void OnTriggerExit2D(Collider2D col)
+    {
+        if (col.CompareTag("Wall"))
+            isInsideObstacle = false;
     }
 
     void GoToPuzzleTick()
@@ -175,34 +199,133 @@ public class EnemyBrain : MonoBehaviour
             agent.speed = patrolSpeed;
         }
     }
+
+    void StartPhasing()
+    {
+        if (isPhasing) return;
+        isPhasing = true;
+        if (agent) agent.enabled = false;  // disable NavMeshAgent control
+        rb.isKinematic = false;            // allow manual movement
+        if (col) col.enabled = false;
+        Debug.Log($"{name} started phasing!");
+    }
+
+    void StopPhasing()
+    {
+        if (!isPhasing) return;
+
+        isPhasing = false;
+        Debug.Log($"[Ghost Debug] >>> STOPPING PHASE | Position: {transform.position} | Distance to player: {Vector2.Distance(transform.position, player.position):F2}");
+
+        // Re-enable collider
+        if (col)
+        {
+            col.enabled = true;
+            Debug.Log("[Ghost Debug] Collider re-enabled.");
+        }
+
+        // Re-enable NavMeshAgent
+        if (agent)
+        {
+            agent.enabled = true;
+            Debug.Log("[Ghost Debug] NavMeshAgent re-enabled.");
+
+            if (agent.isOnNavMesh)
+            {
+                // Sync agent position with current ghost position to avoid jumps
+                agent.Warp(transform.position);
+                agent.isStopped = false;
+                agent.speed = chaseSpeed;
+
+                // Reset destination to player or last seen position
+                Vector3 destination = player ? player.position : lastSeenPos;
+                agent.SetDestination(destination);
+
+                Debug.Log($"[Ghost Debug] Agent destination set to {(player ? "player" : "lastSeenPos")}: {destination}");
+            }
+            else
+            {
+                Debug.LogWarning("[Ghost Debug] NavMeshAgent is not on NavMesh! Cannot set destination.");
+            }
+        }
+
+        rb.velocity = Vector2.zero;
+        Debug.Log("[Ghost Debug] Ghost fully unphased and ready to chase.");
+    }
+
+
+    void PhaseMoveTowardPlayer()
+    {
+        Vector2 dir = (player.position - transform.position).normalized;
+        rb.MovePosition(rb.position + dir * phaseSpeed * Time.deltaTime);
+    }
+
+
     void ChaseTick(bool canSeePlayer)
     {
         if (!player) return;
 
-        Vector2 targetPos = player.position; // always chase the player’s current position
+        float dist = Vector2.Distance(transform.position, player.position);
 
-        if (canSeePlayer)
+        // --- Debug every 1 meter change (to avoid spam)
+        if (Mathf.Abs(dist - lastDebugDist) > 1f)
         {
-            lastSeenPos = targetPos;
-            lostTimer = loseSightToSearchTime; // reset timer while player visible
-            Debug.Log($"[Chase] Player visible. Reset lostTimer to {lostTimer}");
+            Debug.Log($"[Ghost Debug] Distance to player: {dist:F1} | Phasing: {isPhasing} | CanSeePlayer: {canSeePlayer}");
+            lastDebugDist = dist;
         }
-        else
-        {
-            lostTimer -= Time.deltaTime;
-            Debug.Log($"[Chase] Player not visible. Countdown: {lostTimer:F2} seconds");
 
-            if (lostTimer <= 0f)
+
+        // === Handle Phase Mode ===
+        if (!isPhasing && dist > phaseDistance)
+        {
+            // Begin phasing
+            StartPhasing();
+            Debug.Log($"[Ghost Debug] >>> Started phasing (distance {dist:F1} > {phaseDistance})");
+        }
+        else if (isPhasing)
+        {
+            // Check if we can stop phasing
+            if (!isInsideObstacle && (dist < phaseDistance - unphaseBuffer || !canSeePlayer))
             {
-                Debug.Log("[Chase] Lost timer expired. Entering Search state.");
-                EnterSearch();
-                return; // stop chasing after countdown ends
+                StopPhasing();
+                Debug.Log($"[Ghost Debug] <<< Stopped phasing (distance {dist:F1}) | Inside obstacle: {isInsideObstacle} | CanSee: {canSeePlayer}");
             }
         }
 
-        // Keep moving toward the player during countdown
-        MoveToTarget(targetPos, chaseSpeed);
+        if (isPhasing)
+        {
+            PhaseMoveTowardPlayer();
+        }
+        else
+        {
+            // Normal NavMesh chase
+            Vector2 targetPos = player.position;
+
+            if (canSeePlayer)
+            {
+                lastSeenPos = targetPos;
+                lostTimer = loseSightToSearchTime;
+            }
+            else
+            {
+                lostTimer -= Time.deltaTime;
+                if (lostTimer <= 0f)
+                {
+                    EnterSearch();
+                    return;
+                }
+            }
+
+            MoveToTarget(targetPos, chaseSpeed);
+        }
+        if (isPhasing != lastPhaseState)
+        {
+            Debug.Log($"[Ghost Debug] Phase state changed: {(isPhasing ? "PHASING" : "NORMAL")} | Dist: {dist:F1}");
+            lastPhaseState = isPhasing;
+        }
+
     }
+
 
 
     void PatrolTick()
@@ -224,6 +347,7 @@ public class EnemyBrain : MonoBehaviour
     {
         if (agent)
         {
+            if (isPhasing || !agent || !agent.enabled) return;
             agent.SetDestination(target);
             agent.speed = speed;
         }

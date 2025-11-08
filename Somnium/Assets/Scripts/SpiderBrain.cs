@@ -1,10 +1,9 @@
+﻿using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public enum EnemyState { Patrol, Chase, Search, GoToPuzzle }
-
 [RequireComponent(typeof(Rigidbody2D))]
-public class EnemyBrain : MonoBehaviour
+public class SpiderBrain : MonoBehaviour
 {
     public EnemyPatrol patrol;
     public VisionCone fov;
@@ -31,6 +30,17 @@ public class EnemyBrain : MonoBehaviour
     public Transform puzzlePosition; // assign the puzzle GameObject in Inspector
     private float puzzleTimer = 0f;
     public float maxPuzzleTime = 10f; // seconds
+
+    [Header("Spider Grapple Settings")]
+    public LayerMask wallMask;
+    public float grappleTriggerDistance = 10f;   // how far player must be to trigger grapple
+    public float grappleSearchRadius = 5f;       // how far around player to look for a wall
+    public float grappleSpeed = 20f;             // movement speed during grapple
+    public float grappleCooldown = 5f;           // time before next grapple
+    private bool isGrappling = false;
+    private float grappleCooldownTimer = 0f;
+
+    public LayerMask obstacleMask; // for line-of-sight blocking
 
     public EnemyState state = EnemyState.Patrol;
 
@@ -77,7 +87,11 @@ public class EnemyBrain : MonoBehaviour
         switch (state)
         {
             case EnemyState.Patrol: PatrolTick(); break;
-            case EnemyState.Chase: ChaseTick(canSeePlayer); break;
+            case EnemyState.Chase:
+                if (grappleCooldownTimer > 0f)
+                    grappleCooldownTimer -= Time.deltaTime;
+                ChaseTick(canSeePlayer);
+                break;
             case EnemyState.Search: SearchTick(); break;
             case EnemyState.GoToPuzzle: GoToPuzzleTick(); break;
         }
@@ -175,22 +189,132 @@ public class EnemyBrain : MonoBehaviour
             agent.speed = patrolSpeed;
         }
     }
+
+    void TryWebGrapple()
+    {
+        if (!player)
+        {
+            Debug.LogWarning($"{name}: No player assigned — cannot grapple!");
+            return;
+        }
+
+        Debug.Log($"[Grapple] Attempting grapple. WallMask value: {wallMask.value}, SearchRadius: {grappleSearchRadius}");
+
+        // find a wall near the player within radius
+        Collider2D[] walls = Physics2D.OverlapCircleAll(player.position, grappleSearchRadius, wallMask);
+        Debug.Log($"[Grapple] Found {walls.Length} possible walls near player at {player.position}");
+
+        if (walls.Length == 0)
+        {
+            Debug.LogWarning("[Grapple] No walls detected near player. Check wallMask layer settings!");
+            return;
+        }
+
+        Transform bestWall = null;
+        float bestDot = -1f;
+        Vector2 dirToPlayer = (player.position - transform.position).normalized;
+
+        foreach (var w in walls)
+        {
+            if (w == null) continue;
+
+            Vector2 wallPoint = w.ClosestPoint(player.position);
+            Vector2 toWall = (wallPoint - (Vector2)transform.position).normalized;
+            float dot = Vector2.Dot(dirToPlayer, toWall);
+            bool blocked = Physics2D.Linecast(transform.position, wallPoint, obstacleMask);
+
+            Debug.Log($"[Grapple] Checking wall '{w.name}' at {wallPoint}: dot={dot:F2}, blocked={blocked}");
+            Debug.DrawLine(transform.position, wallPoint, Color.cyan, 1.0f);
+
+            if (dot > bestDot && !blocked)
+            {
+                bestDot = dot;
+                bestWall = w.transform;
+            }
+        }
+
+        if (bestWall != null)
+        {
+            Vector2 bestPoint = bestWall.GetComponent<Collider2D>().ClosestPoint(player.position);
+            Debug.Log($"[Grapple] Selected best wall '{bestWall.name}' at {bestPoint}");
+            StartCoroutine(WebGrappleRoutine(bestPoint));
+        }
+
+        else
+        {
+            Debug.LogWarning("[Grapple] No valid wall with line of sight found!");
+        }
+    }
+
+
+    System.Collections.IEnumerator WebGrappleRoutine(Vector2 wallPoint)
+    {
+        Debug.Log($"{name} launching grapple toward {wallPoint}");
+        isGrappling = true;
+        grappleCooldownTimer = grappleCooldown;
+
+        if (agent)
+        {
+            Debug.Log("[Grapple] Disabling NavMeshAgent temporarily.");
+            agent.enabled = false;
+            agent.ResetPath(); // <-- important: clears target
+        }
+
+        Vector2 startPos = transform.position;
+        float startDist = Vector2.Distance(startPos, wallPoint);
+        Debug.Log($"[Grapple] Start distance to wall: {startDist:F2}");
+
+        // simulate fast movement to wall
+        while (Vector2.Distance(transform.position, wallPoint) > 0.5f)
+        {
+            transform.position = Vector2.MoveTowards(transform.position, wallPoint, grappleSpeed * Time.deltaTime);
+            yield return null;
+        }
+
+        Debug.Log($"{name} reached wall point ({wallPoint}), dropping back into chase.");
+
+        yield return new WaitForSeconds(0.3f);
+
+        if (agent)
+        {
+            Debug.Log("[Grapple] Re-enabling NavMeshAgent.");
+            yield return null; // one frame delay to ensure transform has settled
+            agent.enabled = true;
+            if (agent.isOnNavMesh)
+                Debug.Log("[Grapple] Agent successfully reattached to NavMesh.");
+            else
+                Debug.LogWarning("[Grapple] Agent NOT on NavMesh after grapple!");
+        }
+
+        isGrappling = false;
+    }
+
+    void OnDrawGizmosSelected()
+    {
+        if (player)
+        {
+            Gizmos.color = Color.cyan;
+            Gizmos.DrawWireSphere(player.position, grappleSearchRadius);
+        }
+    }
+
     void ChaseTick(bool canSeePlayer)
     {
         if (!player) return;
 
         Vector2 targetPos = player.position; // always chase the player’s current position
+        float dist = Vector2.Distance(transform.position, targetPos);
 
         if (canSeePlayer)
         {
             lastSeenPos = targetPos;
             lostTimer = loseSightToSearchTime; // reset timer while player visible
-            Debug.Log($"[Chase] Player visible. Reset lostTimer to {lostTimer}");
+            //Debug.Log($"[Chase] Player visible. Reset lostTimer to {lostTimer}");
         }
         else
         {
             lostTimer -= Time.deltaTime;
-            Debug.Log($"[Chase] Player not visible. Countdown: {lostTimer:F2} seconds");
+            //Debug.Log($"[Chase] Player not visible. Countdown: {lostTimer:F2} seconds");
 
             if (lostTimer <= 0f)
             {
@@ -200,8 +324,20 @@ public class EnemyBrain : MonoBehaviour
             }
         }
 
-        // Keep moving toward the player during countdown
-        MoveToTarget(targetPos, chaseSpeed);
+        // 🕸️ Try grapple if player is far and visible
+        bool recentlySawPlayer = (lostTimer > 0f);
+
+        if (!isGrappling && recentlySawPlayer && dist > grappleTriggerDistance && grappleCooldownTimer <= 0f)
+        {
+            TryWebGrapple();
+
+        }
+
+        // Only use NavMesh when not grappling
+        if (!isGrappling)
+        {
+            MoveToTarget(targetPos, chaseSpeed);
+        }
     }
 
 

@@ -1,5 +1,4 @@
-using System.Collections;
-using System.Collections.Generic;
+using UnityEngine.AI;
 using UnityEngine;
 
 public class VisionCone : MonoBehaviour
@@ -10,6 +9,9 @@ public class VisionCone : MonoBehaviour
     public LayerMask playerMask;
     public LayerMask obstacleMask;
 
+    [Header("Optional: for movement-based facing")]
+    public Rigidbody2D rb;
+    public NavMeshAgent agent;
 
     void Reset()
     {
@@ -28,7 +30,8 @@ public class VisionCone : MonoBehaviour
         if (toTarget.sqrMagnitude > visionRadius * visionRadius)
             return false;
 
-        Vector2 forward = transform.right; // right is forward in top-down
+        // --- CHANGED PART: use movement direction if available ---
+        Vector2 forward = GetForward();
         if (Vector2.Angle(forward, toTarget) > visionAngle * 0.5f)
             return false;
 
@@ -43,17 +46,28 @@ public class VisionCone : MonoBehaviour
         return true;
     }
 
-    void OnDrawGizmosSelected()
+    Vector2 GetForward()
+    {
+        if (rb && rb.velocity.sqrMagnitude > 0.01f)
+            return rb.velocity.normalized;
+
+        if (agent && agent.velocity.sqrMagnitude > 0.01f)
+            return agent.velocity.normalized;
+
+        return transform.right; // fallback to sprite facing
+    }
+
+    void OnDrawGizmos()
     {
         if (!visionOrigin) visionOrigin = transform;
         Gizmos.color = new Color(1f, 1f, 0f, 0.3f);
 
         Vector3 origin = visionOrigin.position;
-        Vector3 leftBoundary = Quaternion.Euler(0, 0, visionAngle / 2) * transform.right * visionRadius;
-        Vector3 rightBoundary = Quaternion.Euler(0, 0, -visionAngle / 2) * transform.right * visionRadius;
+        Vector2 forward = GetForward();
+        Vector3 leftBoundary = Quaternion.Euler(0, 0, visionAngle / 2) * (Vector3)forward * visionRadius;
+        Vector3 rightBoundary = Quaternion.Euler(0, 0, -visionAngle / 2) * (Vector3)forward * visionRadius;
 
         Gizmos.DrawLine(origin, origin + leftBoundary);
         Gizmos.DrawLine(origin, origin + rightBoundary);
     }
-
 }
