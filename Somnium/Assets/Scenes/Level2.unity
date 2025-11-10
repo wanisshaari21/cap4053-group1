@@ -40705,7 +40705,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &816278936
 RectTransform:
   m_ObjectHideFlags: 0
@@ -40773,9 +40773,20 @@ MonoBehaviour:
   m_GameObject: {fileID: 816278935}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 317319ef63df67c45b70f9ff7009ba40, type: 3}
+  m_Script: {fileID: 11500000, guid: 0d9f1eef71c9449ee8de151526d5a3c3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  tombstones:
+  - numberText: {fileID: 278380316}
+  - numberText: {fileID: 590780189}
+  - numberText: {fileID: 593456693}
+  - numberText: {fileID: 1573284366}
+  infoText: {fileID: 1260732922}
+  triesText: {fileID: 1831356131}
+  activator: {fileID: 0}
+  flipBackDelay: 0.8
+  exitDelay: 1.5
+  maxTries: 2
 --- !u!1 &843658593
 GameObject:
   m_ObjectHideFlags: 0
@@ -49961,7 +49972,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &1451330135
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -50679,6 +50690,18 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0b09e7857660247b1477e93731de29, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1952138159 stripped
+MonoBehaviour:
+  m_CorrespondingSourceObject: {fileID: 965730242906213974, guid: b8ce4a6200b44dfaae185d7347ed4cc2,
+    type: 3}
+  m_PrefabInstance: {fileID: 2020585289}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: eadac1b26ecb543ecbd08c7343a6f716, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &1995680255
 GameObject:
   m_ObjectHideFlags: 0
@@ -50957,9 +50980,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 2027506263}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 93b1cfffb89405242b2035c26977f345, type: 3}
+  m_Script: {fileID: 11500000, guid: a50176a2baf1e48cea48490b561b8828, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  puzzleUI: {fileID: 816278935}
+  playerMovement: {fileID: 1952138159}
 --- !u!61 &2027506265
 BoxCollider2D:
   m_ObjectHideFlags: 0
