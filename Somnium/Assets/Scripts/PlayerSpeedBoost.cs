@@ -8,10 +8,20 @@ public class PlayerSpeedBoost : MonoBehaviour
     [SerializeField] float boostDuration = 1.25f;
     [SerializeField] float cooldown = 2.0f;
 
+    // --- 1. ADD THIS NEW LINE ---
+    [SerializeField] float boostWarningTime = 0.5f; // How many seconds before ending to start warning
+
     float boostUntil = -999f;
     float nextAllowed = 0f;
 
     public bool IsBoosting => Time.time < boostUntil;
+
+    // --- 2. ADD THIS NEW PROPERTY ---
+    /// <summary>
+    /// True if the boost is active AND in its final warning period.
+    /// </summary>
+    public bool IsBoostEndingSoon => IsBoosting && (boostUntil - Time.time < boostWarningTime);
+    
     public float GetSpeedMultiplier() => IsBoosting ? boostMultiplier : 1f;
 
     public bool TryTriggerBoost()

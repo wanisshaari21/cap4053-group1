@@ -6,6 +6,11 @@ TagManager:
   tags:
   - Enemy
   - Wall
+  - CheckPointA
+  - CheckPointB
+  - LoopZone
+  - CheckPointC
+  - CheckPointD
   layers:
   - Default
   - TransparentFX
