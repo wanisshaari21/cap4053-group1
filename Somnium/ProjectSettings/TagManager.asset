@@ -5,6 +5,11 @@ TagManager:
   serializedVersion: 2
   tags:
   - Enemy
+  - CheckPointA
+  - CheckPointB
+  - LoopZone
+  - CheckPointC
+  - CheckPointD
   layers:
   - Default
   - TransparentFX
