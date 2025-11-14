@@ -18,7 +18,7 @@ public class WheelPuzzleTrigger : MonoBehaviour
         else if (isPlayerNear && Input.GetKeyDown(KeyCode.Escape))
         {
             Debug.Log("Puzzle Closed!");
-            wheelPuzzle.EndPuzzle();
+            wheelPuzzle.EscapePuzzle();
             isPuzzleActive = false;
         }
     }

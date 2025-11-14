@@ -69,6 +69,7 @@ public class TimingWheelPuzzle : MonoBehaviour
         // check input
         if (Input.GetKeyDown(KeyCode.Space))
             CheckTiming();
+
     }
 
     void CheckTiming()
@@ -77,17 +78,21 @@ public class TimingWheelPuzzle : MonoBehaviour
         //float normalizedAngle = cursorPivot.eulerAngles.z % 360f;
         float relativeAngle = (cursorPivot.eulerAngles.z - hitZonePivot.eulerAngles.z + 360f) % 360f;
 
-        float hitStart = 0f;
-        float hitEnd = hitZoneAngle;
-        float perfectStart = (hitZoneAngle - perfectZoneAngle) / 2f;
-        float perfectEnd = perfectStart + perfectZoneAngle;
+        float halfHit = hitZoneAngle / 2f;
+        float halfPerfect = perfectZoneAngle / 2f;
 
-        if (relativeAngle >= perfectStart && relativeAngle <= perfectEnd)
+        // Normalize (-180, +180)
+        float centerAngle = (relativeAngle + 360f) % 360f;
+        if (centerAngle > 180f) centerAngle -= 360f;
+
+        // PERFECT: within tiny symmetric window
+        if (Mathf.Abs(centerAngle) <= halfPerfect)
         {
             feedbackText.text = "Perfect!";
             totalScore += perfectScore;
         }
-        else if (relativeAngle <= hitEnd)
+        // GOOD: within larger symmetric window
+        else if (Mathf.Abs(centerAngle) <= halfHit)
         {
             feedbackText.text = "Good!";
             totalScore += goodScore;
@@ -122,6 +127,12 @@ public class TimingWheelPuzzle : MonoBehaviour
 
     public float telegraphAngle; // angle of AOE based on Phase 1
 
+    public void EscapePuzzle()
+    {
+        puzzleActive = false;
+        puzzleUI.SetActive(false);
+    }
+
     public void EndPuzzle()
     {
         puzzleActive = false;
@@ -150,10 +161,8 @@ public class TimingWheelPuzzle : MonoBehaviour
         if (puzzleTrigger != null)
             puzzleTrigger.PuzzleCompleted();
 
-        Debug.Log("Starting Phase 2 Timing Wheel with telegraphAngle: " + telegraphAngle);
-
-        // Launch Phase 2 Timing Wheel
-        StartPhase2TimingWheel();
+        //// Launch Phase 2 Timing Wheel
+        //StartPhase2TimingWheel();
     }
 
     void StartPhase2TimingWheel()
