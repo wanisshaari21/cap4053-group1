@@ -487,9 +487,9 @@ GameObject:
   m_Component:
   - component: {fileID: 3363220549760639187}
   - component: {fileID: 1798867508254763002}
-  - component: {fileID: 78829936851724256}
   - component: {fileID: 2139649278553447157}
   - component: {fileID: 7091924957447579572}
+  - component: {fileID: 418120439242591868}
   m_Layer: 0
   m_Name: redStone
   m_TagString: Untagged
@@ -507,7 +507,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: -1.8676361, y: 2.5981116, z: 0}
-  m_LocalScale: {x: 0.3, y: 0.3, z: 0.3}
+  m_LocalScale: {x: 0.25, y: 0.25, z: 0.25}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 6336605682536285106}
@@ -569,22 +569,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &78829936851724256
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 9063378641272785290}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: d8f8804923fcca147ab98d686b4d26df, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  x: 0
-  y: 0
-  type: 0
-  mergedThisMove: 0
 --- !u!61 &2139649278553447157
 BoxCollider2D:
   m_ObjectHideFlags: 0
@@ -642,3 +626,19 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75f17b4ee45b0fe428991f0569c9ea70, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &418120439242591868
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 9063378641272785290}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0c620066e69b748deacb91142962b5c4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  m_OverrideArea: 1
+  m_Area: 1
+  m_IgnoreFromBuild: 0
+  m_AffectedAgents: ffffffff
