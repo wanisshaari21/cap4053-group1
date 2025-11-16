@@ -4,6 +4,9 @@ using System.Collections;
 
 public class TombstoneMatchingPuzzle : MonoBehaviour
 {
+    // Use this flag to gate the second puzzle
+    public static bool firstPuzzleCompleted = false;
+
     [System.Serializable]
     public class TombstoneSlot
     {
@@ -11,7 +14,7 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     }
 
     [Header("Tombstones")]
-    public TombstoneSlot[] tombstones;   // size = 4
+    public TombstoneSlot[] tombstones;   // size can be 4, 8, etc. MUST be even.
 
     [Header("UI")]
     public TMP_Text infoText;            // top text ("Matched!", "Try again")
@@ -25,7 +28,7 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     public float exitDelay = 1.5f;       // delay before leaving puzzle on win/fail
     public int maxTries = 2;             // how many wrong tries before fail
 
-    private int[] values = new int[4];   // hidden numbers
+    private int[] values;                // hidden numbers (size = tombstones.Length)
     private int firstIndex = -1;         // first clicked index
     private bool inputLocked = false;
     private int pairsFound = 0;
@@ -41,11 +44,22 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
 
     void SetupRound()
     {
-        // two pairs: 1,1,2,2
-        values[0] = 1;
-        values[1] = 1;
-        values[2] = 2;
-        values[3] = 2;
+        if (tombstones == null || tombstones.Length == 0 || tombstones.Length % 2 != 0)
+        {
+            Debug.LogError("TombstoneMatchingPuzzle: tombstones array must be non-empty and even length.");
+            return;
+        }
+
+        int pairCount = tombstones.Length / 2;
+
+        // Build values: 1,1,2,2,3,3,... for however many pairs
+        values = new int[tombstones.Length];
+        int k = 0;
+        for (int v = 1; v <= pairCount; v++)
+        {
+            values[k++] = v;
+            values[k++] = v;
+        }
 
         // shuffle
         for (int i = 0; i < values.Length; i++)
@@ -86,11 +100,19 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     public void ClickTomb1() { ClickTomb(1); }
     public void ClickTomb2() { ClickTomb(2); }
     public void ClickTomb3() { ClickTomb(3); }
+    public void ClickTomb4() { ClickTomb(4); }
+    public void ClickTomb5() { ClickTomb(5); }
+    public void ClickTomb6() { ClickTomb(6); }
+    public void ClickTomb7() { ClickTomb(7); }
+    // Just don’t assign the extra ones on the 4-tombstone puzzle.
     // ---------------------------------------------
 
     void ClickTomb(int index)
     {
-        if (inputLocked || isExiting || index < 0 || index >= tombstones.Length)
+        if (inputLocked || isExiting || values == null)
+            return;
+
+        if (index < 0 || index >= tombstones.Length)
             return;
 
         if (tombstones[index].numberText == null)
@@ -119,6 +141,8 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
         // short delay so they see the second number flip
         yield return new WaitForSeconds(0.25f);
 
+        int pairCount = tombstones.Length / 2;
+
         if (values[a] == values[b])
         {
             // ✅ correct pair
@@ -127,7 +151,7 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
             if (infoText != null)
                 infoText.text = "Matched!";
 
-            if (pairsFound >= 2)
+            if (pairsFound >= pairCount)
             {
                 // all pairs found -> win
                 if (infoText != null)
@@ -179,6 +203,12 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     IEnumerator ExitPuzzleAfterDelay(bool success)
     {
         isExiting = true;
+
+        // If this is the "first puzzle", mark complete on success
+        if (success)
+        {
+            firstPuzzleCompleted = true;
+        }
 
         // pause so player can read the final text
         yield return new WaitForSeconds(exitDelay);
