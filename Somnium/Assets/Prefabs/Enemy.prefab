@@ -135,7 +135,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!4 &5235862682234988381
 Transform:
   m_ObjectHideFlags: 0
@@ -283,7 +283,7 @@ MonoBehaviour:
   loop: 1
   backnforth: 1
   wait: 0.5
-  speed: 3
+  speed: 4
   arriveDistance: 0.2
   fov: {fileID: 3955450902979999205}
   player: {fileID: 0}
