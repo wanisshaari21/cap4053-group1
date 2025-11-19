@@ -37,6 +37,8 @@ public class TimingWheelPuzzle : MonoBehaviour
 
     public Phase2TimingWheel Phase2Wheel;
 
+    private bool roundNotEnded = true;
+
     void Start()
     {
         puzzleUI.SetActive(false);
@@ -45,7 +47,6 @@ public class TimingWheelPuzzle : MonoBehaviour
     public void StartPuzzle()
     {
         puzzleUI.SetActive(true);
-        feedbackText.text = "Timing Puzzle Start!";
         currentRound = 0;
         totalScore = 0f;
         puzzleActive = true;
@@ -58,6 +59,11 @@ public class TimingWheelPuzzle : MonoBehaviour
 
     void Update()
     {
+        if (roundNotEnded)
+        {
+            feedbackText.text = $"{currentRound + 1}/{totalRounds}\n";
+        }
+        
         if (!puzzleActive) return;
 
         //// rotate pointer
@@ -74,6 +80,7 @@ public class TimingWheelPuzzle : MonoBehaviour
 
     void CheckTiming()
     {
+        roundNotEnded = false;
         // normalize angle [0,360)
         //float normalizedAngle = cursorPivot.eulerAngles.z % 360f;
         float relativeAngle = (cursorPivot.eulerAngles.z - hitZonePivot.eulerAngles.z + 360f) % 360f;
@@ -100,6 +107,10 @@ public class TimingWheelPuzzle : MonoBehaviour
         else
         {
             feedbackText.text = "Miss!";
+            puzzleActive = false;
+            if (enemy != null) enemy.EnterGoToPuzzle(puzzleMarker);
+            // Hide puzzle UI automatically after 2 seconds
+            StartCoroutine(EndPuzzleAfterDelay(1f));
         }
 
         currentRound++;
@@ -115,12 +126,21 @@ public class TimingWheelPuzzle : MonoBehaviour
         puzzleActive = false;
         yield return new WaitForSeconds(1f);
         RandomizeZones();
+        roundNotEnded = true;
         puzzleActive = true;
     }
 
     void RandomizeZones()
     {
-        float randomAngle = Random.Range(0f, 360f);
+        float randomAngle;
+
+        // repeat until outside forbidden region
+        do
+        {
+            randomAngle = Random.Range(0f, 360f);
+        }
+        while (randomAngle >= 195f && randomAngle <= 345f); // forbidden North region
+
         hitZonePivot.rotation = Quaternion.Euler(0, 0, -randomAngle);
 
     }
@@ -163,6 +183,18 @@ public class TimingWheelPuzzle : MonoBehaviour
 
         //// Launch Phase 2 Timing Wheel
         //StartPhase2TimingWheel();
+    }
+
+    private IEnumerator EndPuzzleAfterDelay(float delay)
+    {
+        // Keep blocking movement during the delay
+        yield return new WaitForSeconds(delay);
+
+        // Now hide the UI and unblock the player
+        puzzleUI.SetActive(false);
+
+        // Tell PuzzleTrigger the puzzle is over
+        WheelPuzzleTrigger.isPuzzleActive = false;
     }
 
     void StartPhase2TimingWheel()
