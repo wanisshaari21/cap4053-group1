@@ -28,7 +28,7 @@ public class TimingWheelPuzzle : MonoBehaviour
     private float pointerAngle = 0f;
 
     [Header("External")]
-    public EnemyBrain enemy;
+    public SpiderBrain enemy;
     public Transform puzzleMarker;
     public WheelPuzzleTrigger puzzleTrigger;
 
@@ -108,7 +108,15 @@ public class TimingWheelPuzzle : MonoBehaviour
         {
             feedbackText.text = "Miss!";
             puzzleActive = false;
-            if (enemy != null) enemy.EnterGoToPuzzle(puzzleMarker);
+            if (enemy != null)
+            {
+                enemy.EnterGoToPuzzle(puzzleMarker);
+                Debug.Log("Enemy not null");
+            }
+            if (enemy == null)
+            {
+                Debug.Log("Enemy null");
+            }
             // Hide puzzle UI automatically after 2 seconds
             StartCoroutine(EndPuzzleAfterDelay(1f));
         }

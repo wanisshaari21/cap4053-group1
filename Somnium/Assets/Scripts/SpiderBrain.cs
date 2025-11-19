@@ -153,11 +153,16 @@ public class SpiderBrain : MonoBehaviour
             agent.isStopped = false;
             agent.speed = chaseSpeed;
             agent.SetDestination(puzzlePosition.position);
+            Debug.Log("Destination set");
+        }
+        if (agent == false || agent.isOnNavMesh == false)
+        {
+            Debug.Log("Agent not on navmesh");
         }
 
         puzzleTimer = 0f;
 
-        Debug.Log($"{name}: Moving to puzzle at {puzzlePosition.position}");
+        Debug.Log($"{name}: Moving to puzzle 3 at {puzzlePosition.position}");
     }
 
     void EnterPatrol()
