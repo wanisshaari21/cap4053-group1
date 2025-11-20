@@ -138,18 +138,31 @@ public class SpiderBrain : MonoBehaviour
     // ---- States ----
     public void EnterGoToPuzzle(Transform puzzle)
     {
-        if (puzzlePosition == null)
+        if (puzzle == null)
         {
-            Debug.LogWarning($"{name}: Puzzle position not assigned!");
+            Debug.LogWarning($"{name}: EnterGoToPuzzle called with null puzzle transform!");
             return;
         }
+
         puzzlePosition = puzzle;
         state = EnemyState.GoToPuzzle;
-        if (patrol) patrol.enabled = false; // ❌ Disable patrol updates
-        agent.SetDestination(puzzlePosition.position);
-        agent.speed = chaseSpeed;
-        puzzleTimer = 0f; // reset failsafe timer
-        Debug.Log($"{name}: Moving to puzzle at {puzzlePosition.position}");
+
+        if (patrol) patrol.enabled = false;
+        if (agent && agent.isOnNavMesh)
+        {
+            agent.isStopped = false;
+            agent.speed = chaseSpeed;
+            agent.SetDestination(puzzlePosition.position);
+            Debug.Log("Destination set");
+        }
+        if (agent == false || agent.isOnNavMesh == false)
+        {
+            Debug.Log("Agent not on navmesh");
+        }
+
+        puzzleTimer = 0f;
+
+        Debug.Log($"{name}: Moving to puzzle 3 at {puzzlePosition.position}");
     }
 
     void EnterPatrol()
