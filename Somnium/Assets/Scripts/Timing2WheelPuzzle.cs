@@ -3,7 +3,7 @@ using UnityEngine.UI;
 using TMPro;
 using System.Collections;
 
-public class TimingWheelPuzzle : MonoBehaviour
+public class Timing2WheelPuzzle : MonoBehaviour
 {
     [Header("UI References")]
     public GameObject puzzleUI;
@@ -31,7 +31,7 @@ public class TimingWheelPuzzle : MonoBehaviour
     public SpiderBrain enemy;
     public Transform puzzleMarker;
     public PuzzleManager puzzleManager; // assign in Inspector
-    public WheelPuzzleTrigger puzzleTrigger;
+    public Wheel2PuzzleTrigger puzzleTrigger;
 
     public Transform cursorPivot;
     public float rotationSpeed = 60f; // degrees per second
@@ -66,7 +66,7 @@ public class TimingWheelPuzzle : MonoBehaviour
     }
 
     void Update()
-    { 
+    {
         if (!puzzleActive) return;
 
         if (roundNotEnded)
