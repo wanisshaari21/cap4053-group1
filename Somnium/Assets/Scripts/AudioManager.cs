@@ -15,6 +15,7 @@ public class AudioManager : MonoBehaviour
     [Range(0f,1f)] public float musicVolume = 0.5f;
     public float fadeTime = 0.75f;
 
+    private bool isMuted = false;
     void Awake()
     {
         if (I != null && I != this) { Destroy(gameObject); return; }
@@ -38,7 +39,18 @@ public class AudioManager : MonoBehaviour
         }
     }
 
-    // Optional helpers for later
+    public void ToggleMute()
+    {   
+    isMuted = !isMuted;
+
+  
+    AudioListener.volume = isMuted ? 0f : 1f;
+
+    Debug.Log("AudioManager: mute = " + isMuted);
+    }
+
+
+ 
     public void SetMusicVolume(float v)
     {
         musicVolume = Mathf.Clamp01(v);
