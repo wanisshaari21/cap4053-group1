@@ -351,7 +351,6 @@ public class GhostBrain : MonoBehaviour
         {
             MoveToTarget(patrol.CurrentTarget.Value, patrolSpeed);
         }
-        Debug.Log("Patrolling");
     }
 
     void SearchTick()
