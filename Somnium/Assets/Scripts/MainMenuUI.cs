@@ -4,18 +4,13 @@ using UnityEngine.SceneManagement;
 public class MainMenuUI : MonoBehaviour
 {
     [Header("Scene Names")]
-    public string gameSceneName = "Level1";   
-    public string tutorialSceneName = "Tutorial";
+    public string gameSceneName = "Tutorial";   
 
     public void PlayGame()
     {
         SceneManager.LoadScene(gameSceneName);
     }
 
-    public void OpenTutorial()
-    {
-        SceneManager.LoadScene(tutorialSceneName);
-    }
 
     public void ToggleAudio()
     {
