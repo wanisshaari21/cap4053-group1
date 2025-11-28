@@ -85,6 +85,22 @@ public class GhostBrain : MonoBehaviour
             lastSeenPos = player.position;
             if (state != EnemyState.Chase) EnterChase();
         }
+        else if (!canSeePlayer && isPhasing)
+        {
+            
+            lostTimer -= Time.deltaTime;
+            if (lostTimer > 0)
+            {
+                PhaseMoveTowardPlayer();
+            }
+            if (lostTimer <= 0f)
+            {
+                StopPhasing();
+                EnterPatrol();
+                return;
+            }
+            
+        }
 
         switch (state)
         {
@@ -206,7 +222,7 @@ public class GhostBrain : MonoBehaviour
         isPhasing = true;
         if (agent) agent.enabled = false;  // disable NavMeshAgent control
         rb.isKinematic = false;            // allow manual movement
-        if (col) col.enabled = false;
+        col.enabled = false;
         Debug.Log($"{name} started phasing!");
     }
 
@@ -285,7 +301,7 @@ public class GhostBrain : MonoBehaviour
         else if (isPhasing)
         {
             // Check if we can stop phasing
-            if (!isInsideObstacle && (dist < phaseDistance - unphaseBuffer || !canSeePlayer))
+            if (!isInsideObstacle && (dist < phaseDistance - unphaseBuffer /*If player is too close when chasing*/ || (!canSeePlayer && lostTimer <= 0) /*If cannot see player for a certain amount of time */)) 
             {
                 StopPhasing();
                 Debug.Log($"[Ghost Debug] <<< Stopped phasing (distance {dist:F1}) | Inside obstacle: {isInsideObstacle} | CanSee: {canSeePlayer}");
@@ -332,7 +348,10 @@ public class GhostBrain : MonoBehaviour
     {
         // Patrol sets agent destination via MoveToTarget callback
         if (patrol && patrol.CurrentTarget.HasValue)
+        {
             MoveToTarget(patrol.CurrentTarget.Value, patrolSpeed);
+        }
+        Debug.Log("Patrolling");
     }
 
     void SearchTick()

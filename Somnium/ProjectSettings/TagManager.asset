@@ -51,9 +51,6 @@ TagManager:
   - name: Ground
     uniqueID: 3154426499
     locked: 0
-  - name: Gate
-    uniqueID: 1599544057
-    locked: 0
   - name: Background Walls
     uniqueID: 2839816675
     locked: 0
@@ -74,6 +71,9 @@ TagManager:
     locked: 0
   - name: Door
     uniqueID: 1254607851
+    locked: 0
+  - name: Gate
+    uniqueID: 3529861117
     locked: 0
   - name: Enemies
     uniqueID: 2141854715

@@ -37,6 +37,10 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     // make sure we don't exit multiple times
     private bool isExiting = false;
 
+    public PuzzleManager puzzleManager; // assign in Inspector
+    public GhostBrain enemy;
+    public Transform puzzleMarker;
+
     void OnEnable()
     {
         SetupRound();
@@ -157,6 +161,9 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
                 if (infoText != null)
                     infoText.text = "All pairs found!";
 
+                if (puzzleManager != null)
+                    puzzleManager.PuzzleCompleted();
+
                 if (!isExiting)
                     StartCoroutine(ExitPuzzleAfterDelay(true));
 
@@ -177,6 +184,16 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
             {
                 if (infoText != null)
                     infoText.text = "You feel a chill...";
+
+                if (enemy != null)
+                {
+                    Debug.Log("ArrowPuzzle: telling enemy to go to puzzle");
+                    enemy.EnterGoToPuzzle(puzzleMarker);
+                }
+                else
+                {
+                    Debug.LogWarning("ArrowPuzzle: Enemy reference not assigned!");
+                }
 
                 if (!isExiting)
                     StartCoroutine(ExitPuzzleAfterDelay(false));
