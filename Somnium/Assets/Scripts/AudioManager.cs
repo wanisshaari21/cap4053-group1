@@ -5,17 +5,18 @@ using System.Collections;
 public class AudioManager : MonoBehaviour
 {
     public static AudioManager I { get; private set; }
+    private bool isMuted = false;
+
 
     [Header("Routing")]
-    public AudioMixer masterMixer;    
+    public AudioMixer masterMixer;
     public AudioSource musicSource;   // assign the AudioSource on this GameObject
 
     [Header("Default Music")]
+    [Range(0f,1f)] public float musicVolume = 1.0f;   // start LOUD
     public AudioClip backgroundMusic;
-    [Range(0f,1f)] public float musicVolume = 0.5f;
     public float fadeTime = 0.75f;
 
-    private bool isMuted = false;
     void Awake()
     {
         if (I != null && I != this) { Destroy(gameObject); return; }
@@ -24,38 +25,54 @@ public class AudioManager : MonoBehaviour
 
         if (musicSource)
         {
-            musicSource.loop = true;
-            musicSource.spatialBlend = 0f; // 2D
-            musicSource.volume = musicVolume;
+            musicSource.loop         = true;
+            musicSource.spatialBlend = 0f;   // 2D
+            musicSource.mute         = false;
+            musicSource.volume       = musicVolume;
         }
+
+        // global safety
+        AudioListener.volume = 1f;
     }
 
     void Start()
     {
         if (backgroundMusic && musicSource && !musicSource.isPlaying)
         {
-            musicSource.clip = backgroundMusic;
+            musicSource.clip   = backgroundMusic;
+            musicSource.volume = musicVolume;
             musicSource.Play();
+            Debug.Log($"[AudioManager] Start playing at volume {musicSource.volume}");
         }
     }
 
-    public void ToggleMute()
-    {   
-    isMuted = !isMuted;
+    // ---------- SLIDER HOOK ----------
 
-  
-    AudioListener.volume = isMuted ? 0f : 1f;
-
-    Debug.Log("AudioManager: mute = " + isMuted);
-    }
-
-
- 
-    public void SetMusicVolume(float v)
+    public void SetVolumeFromSlider(float value)
     {
-        musicVolume = Mathf.Clamp01(v);
-        if (musicSource) musicSource.volume = musicVolume;
+        // slider is 0–1
+        musicVolume = Mathf.Clamp01(value);
+
+        if (musicSource)
+            musicSource.volume = musicVolume;
+
+        // also scale global listener so EVERYTHING follows the slider
+        AudioListener.volume = musicVolume;
+
+        Debug.Log($"[AudioManager] Slider: {value:F2}, " +
+                  $"musicSource.volume={musicSource?.volume}, " +
+                  $"listener={AudioListener.volume}");
     }
+
+    public void ToggleMute()
+    {
+        if (!musicSource) return;
+        musicSource.mute = !musicSource.mute;
+        AudioListener.volume = musicSource.mute ? 0f : musicVolume;
+        Debug.Log("[AudioManager] Muted: " + musicSource.mute);
+    }
+
+    // ---------- Fade helpers (unchanged) ----------
 
     public void FadeTo(AudioClip newClip)
     {
@@ -65,21 +82,21 @@ public class AudioManager : MonoBehaviour
 
     IEnumerator FadeRoutine(AudioClip newClip)
     {
-        float t=0, start=musicSource.volume;
+        float t = 0, start = musicSource.volume;
         while (t < fadeTime)
         {
             t += Time.deltaTime;
-            musicSource.volume = Mathf.Lerp(start, 0f, t/fadeTime);
+            musicSource.volume = Mathf.Lerp(start, 0f, t / fadeTime);
             yield return null;
         }
         musicSource.clip = newClip;
         musicSource.Play();
 
-        t=0;
+        t = 0;
         while (t < fadeTime)
         {
             t += Time.deltaTime;
-            musicSource.volume = Mathf.Lerp(0f, musicVolume, t/fadeTime);
+            musicSource.volume = Mathf.Lerp(0f, musicVolume, t / fadeTime);
             yield return null;
         }
     }
