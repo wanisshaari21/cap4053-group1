@@ -1,8 +1,10 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEditor;
 using UnityEngine.Rendering.Universal;
+
+#if UNITY_EDITOR
+using UnityEditor;
 
 public static class GenerateShadows
 {
@@ -45,3 +47,4 @@ public static class GenerateShadows
         Debug.Log($"Generated {pathCount} ShadowCaster2D objects from CompositeCollider2D.");
     }
 }
+#endif

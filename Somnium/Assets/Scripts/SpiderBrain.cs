@@ -37,7 +37,7 @@ public class SpiderBrain : MonoBehaviour
     public float grappleSearchRadius = 5f;       // how far around player to look for a wall
     public float grappleSpeed = 20f;             // movement speed during grapple
     public float grappleCooldown = 5f;           // time before next grapple
-    private bool isGrappling = false;
+    public bool isGrappling = false;
     private float grappleCooldownTimer = 0f;
 
     public LayerMask obstacleMask; // for line-of-sight blocking
@@ -188,6 +188,9 @@ public class SpiderBrain : MonoBehaviour
             agent.isStopped = false;
             agent.speed = chaseSpeed;
         }
+
+        // Start a 1 second cooldown before grappling
+        grappleCooldownTimer = 1f;
     }
 
     void EnterSearch()
@@ -249,6 +252,7 @@ public class SpiderBrain : MonoBehaviour
         if (bestWall != null)
         {
             Vector2 bestPoint = bestWall.GetComponent<Collider2D>().ClosestPoint(player.position);
+
             Debug.Log($"[Grapple] Selected best wall '{bestWall.name}' at {bestPoint}");
             StartCoroutine(WebGrappleRoutine(bestPoint));
         }
@@ -277,10 +281,19 @@ public class SpiderBrain : MonoBehaviour
         float startDist = Vector2.Distance(startPos, wallPoint);
         Debug.Log($"[Grapple] Start distance to wall: {startDist:F2}");
 
+        float elapsed = 0f;
         // simulate fast movement to wall
         while (Vector2.Distance(transform.position, wallPoint) > 0.5f)
         {
             transform.position = Vector2.MoveTowards(transform.position, wallPoint, grappleSpeed * Time.deltaTime);
+            elapsed += Time.deltaTime;
+
+            // ✅ Failsafe: cancel if stuck more than 2 seconds
+            if (elapsed > 2f)
+            {
+                Debug.LogWarning($"{name} grapple failsafe triggered. Returning to NavMesh.");
+                break;
+            }
             yield return null;
         }
 

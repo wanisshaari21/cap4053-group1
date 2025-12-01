@@ -660,6 +660,31 @@ BoxCollider2D:
   serializedVersion: 2
   m_Size: {x: 1.4560184, y: 1.9120865}
   m_EdgeRadius: 0
+--- !u!1 &243143588 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1284926686900101570, guid: 48126b9d05915624cad095241b83ae41,
+    type: 3}
+  m_PrefabInstance: {fileID: 1784089952}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &243143589
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 243143588}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90d292b2c94c0d4f8af4f141b2858b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
+  chaseStartStinger: {fileID: 0}
+  chaseEndStinger: {fileID: 0}
+  loopVolume: 0.6
+  fadeTime: 0.35
+  loopSource: {fileID: 0}
+  sfxSource: {fileID: 0}
 --- !u!1 &244908578
 GameObject:
   m_ObjectHideFlags: 0
@@ -26184,6 +26209,11 @@ PrefabInstance:
       objectReference: {fileID: 2062253746}
     - target: {fileID: 6221546109519296700, guid: 48126b9d05915624cad095241b83ae41,
         type: 3}
+      propertyPath: grappleSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221546109519296700, guid: 48126b9d05915624cad095241b83ae41,
+        type: 3}
       propertyPath: maxPuzzleTime
       value: 20
       objectReference: {fileID: 0}
@@ -26250,11 +26280,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1284926686900101570, guid: 48126b9d05915624cad095241b83ae41,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 2033620331}
-    - targetCorrespondingSourceObject: {fileID: 1284926686900101570, guid: 48126b9d05915624cad095241b83ae41,
-        type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 2033620330}
+      addedObject: {fileID: 2033620334}
   m_SourcePrefab: {fileID: 100100000, guid: 48126b9d05915624cad095241b83ae41, type: 3}
 --- !u!1 &693227129 stripped
 GameObject:
@@ -27987,6 +28013,11 @@ PrefabInstance:
       objectReference: {fileID: 2062253746}
     - target: {fileID: 6221546109519296700, guid: 48126b9d05915624cad095241b83ae41,
         type: 3}
+      propertyPath: grappleSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221546109519296700, guid: 48126b9d05915624cad095241b83ae41,
+        type: 3}
       propertyPath: maxPuzzleTime
       value: 20
       objectReference: {fileID: 0}
@@ -28049,7 +28080,11 @@ PrefabInstance:
     - {fileID: 3584818317620187663, guid: 48126b9d05915624cad095241b83ae41, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1284926686900101570, guid: 48126b9d05915624cad095241b83ae41,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1480142662}
   m_SourcePrefab: {fileID: 100100000, guid: 48126b9d05915624cad095241b83ae41, type: 3}
 --- !u!1 &1457916288
 GameObject:
@@ -28126,6 +28161,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1457916288}
   m_CullTransparentMesh: 1
+--- !u!1 &1480142661 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 1284926686900101570, guid: 48126b9d05915624cad095241b83ae41,
+    type: 3}
+  m_PrefabInstance: {fileID: 1435048175}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1480142662
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1480142661}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: b90d292b2c94c0d4f8af4f141b2858b9, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
+  chaseStartStinger: {fileID: 0}
+  chaseEndStinger: {fileID: 0}
+  loopVolume: 0.6
+  fadeTime: 0.35
+  loopSource: {fileID: 0}
+  sfxSource: {fileID: 0}
 --- !u!1 &1528092297
 GameObject:
   m_ObjectHideFlags: 0
@@ -28765,6 +28825,11 @@ PrefabInstance:
       objectReference: {fileID: 2062253746}
     - target: {fileID: 6221546109519296700, guid: 48126b9d05915624cad095241b83ae41,
         type: 3}
+      propertyPath: grappleSpeed
+      value: 20
+      objectReference: {fileID: 0}
+    - target: {fileID: 6221546109519296700, guid: 48126b9d05915624cad095241b83ae41,
+        type: 3}
       propertyPath: maxPuzzleTime
       value: 20
       objectReference: {fileID: 0}
@@ -28827,7 +28892,11 @@ PrefabInstance:
     - {fileID: 3584818317620187663, guid: 48126b9d05915624cad095241b83ae41, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 1284926686900101570, guid: 48126b9d05915624cad095241b83ae41,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 243143589}
   m_SourcePrefab: {fileID: 100100000, guid: 48126b9d05915624cad095241b83ae41, type: 3}
 --- !u!1001 &1882399586
 PrefabInstance:
@@ -29147,7 +29216,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9e33f6cde4d1d948b85de342b08c945, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &2033620330
+--- !u!114 &2033620334
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -29156,41 +29225,16 @@ MonoBehaviour:
   m_GameObject: {fileID: 693227129}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e202fad632a2e0544833dde23881fa62, type: 3}
+  m_Script: {fileID: 11500000, guid: b90d292b2c94c0d4f8af4f141b2858b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseLoop: {fileID: 0}
+  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
   chaseStartStinger: {fileID: 0}
   chaseEndStinger: {fileID: 0}
   loopVolume: 0.6
   fadeTime: 0.35
   loopSource: {fileID: 0}
   sfxSource: {fileID: 0}
---- !u!114 &2033620331
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 693227129}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 677fd51073d434040b5883efc67a1210, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  patrol: {fileID: 0}
-  fov: {fileID: 0}
-  player: {fileID: 0}
-  agent: {fileID: 0}
-  patrolSpeed: 3.5
-  chaseSpeed: 6
-  loseSightToSearchTime: 3
-  searchDuration: 8
-  visionPivot: {fileID: 0}
-  maxTurnDegPerSec: 360
-  puzzlePosition: {fileID: 0}
-  maxPuzzleTime: 10
-  state: 0
 --- !u!1 &2037945326
 GameObject:
   m_ObjectHideFlags: 0
