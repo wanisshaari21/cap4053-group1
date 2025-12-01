@@ -48,13 +48,34 @@ public class VisionCone : MonoBehaviour
 
     Vector2 GetForward()
     {
+        // 1) If using Rigidbody, use its velocity if moving
         if (rb && rb.velocity.sqrMagnitude > 0.01f)
             return rb.velocity.normalized;
 
+        // 2) If using NavMeshAgent, use its velocity if moving
         if (agent && agent.velocity.sqrMagnitude > 0.01f)
             return agent.velocity.normalized;
 
-        return transform.right; // fallback to sprite facing
+        // 3) PHASE MODE: fallback to player direction if assigned
+        GhostBrain ghost = GetComponent<GhostBrain>();
+        if (ghost && ghost.player)
+        {
+            Vector2 dirToPlayer = ((Vector2)ghost.player.position - (Vector2)transform.position).normalized;
+            if (dirToPlayer.sqrMagnitude > 0.001f)
+                return dirToPlayer;
+        }
+
+        // 4) Spider jump/grapple case: use direction to player if assigned
+        SpiderBrain spider = GetComponent<SpiderBrain>();
+        if (spider && spider.player && spider.isGrappling)
+        {
+            Vector2 dirToPlayer = ((Vector2)spider.player.position - (Vector2)transform.position).normalized;
+            if (dirToPlayer.sqrMagnitude > 0.001f)
+                return dirToPlayer;
+        }
+
+        // 5) Last fallback: sprite right
+        return transform.right;
     }
 
     void OnDrawGizmos()
