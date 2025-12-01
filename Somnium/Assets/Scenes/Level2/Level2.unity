@@ -597,6 +597,12 @@ Transform:
   m_Children: []
   m_Father: {fileID: 1618107360}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &183647106 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+    type: 3}
+  m_PrefabInstance: {fileID: 225854783}
+  m_PrefabAsset: {fileID: 0}
 --- !u!1001 &197382133
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -749,9 +755,30 @@ PrefabInstance:
       objectReference: {fileID: 1663788383}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
+      propertyPath: chaseSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: phaseSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: hallucinationPrefab
+      value: 
+      objectReference: {fileID: 8565965419365681440, guid: 527494ef5350545b2a476f6ed1a23c9c,
+        type: 3}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: loseSightToSearchTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4525689046480915791, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
       propertyPath: path
@@ -777,10 +804,15 @@ PrefabInstance:
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 2027506267}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5159963152736950255, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 834124424}
   m_SourcePrefab: {fileID: 100100000, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
 --- !u!1 &246471556
 GameObject:
@@ -1084,9 +1116,30 @@ PrefabInstance:
       objectReference: {fileID: 1663788383}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
+      propertyPath: chaseSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: phaseSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: hallucinationPrefab
+      value: 
+      objectReference: {fileID: 8565965419365681440, guid: 527494ef5350545b2a476f6ed1a23c9c,
+        type: 3}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: loseSightToSearchTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4525689046480915791, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
       propertyPath: path
@@ -1112,10 +1165,15 @@ PrefabInstance:
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 2027506267}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5159963152736950255, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1488923547}
   m_SourcePrefab: {fileID: 100100000, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
 --- !u!4 &307795736 stripped
 Transform:
@@ -1575,9 +1633,30 @@ PrefabInstance:
       objectReference: {fileID: 1663788383}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
+      propertyPath: chaseSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: phaseSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: hallucinationPrefab
+      value: 
+      objectReference: {fileID: 8565965419365681440, guid: 527494ef5350545b2a476f6ed1a23c9c,
+        type: 3}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: loseSightToSearchTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4525689046480915791, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
       propertyPath: path
@@ -1603,10 +1682,15 @@ PrefabInstance:
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 2027506267}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5159963152736950255, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1190191038}
   m_SourcePrefab: {fileID: 100100000, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
 --- !u!4 &390794661 stripped
 Transform:
@@ -41905,6 +41989,12 @@ GameObject:
     type: 3}
   m_PrefabInstance: {fileID: 1108013524}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &550215133 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+    type: 3}
+  m_PrefabInstance: {fileID: 371502734}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &557501886 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1550208475266322740, guid: 39e11c6a212d019438cc510e6b9e30f7,
@@ -42863,9 +42953,40 @@ PrefabInstance:
       objectReference: {fileID: 1663788383}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
+      propertyPath: chaseSpeed
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: phaseSpeed
+      value: 16
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: teleportCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: hallucinationSpeed
+      value: 2
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: hallucinationPrefab
+      value: 
+      objectReference: {fileID: 5830156546389357641, guid: 33b9ad6016bab5f4ba4b520d9ed40b59,
+        type: 3}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
+      propertyPath: loseSightToSearchTime
+      value: 5
+      objectReference: {fileID: 0}
     - target: {fileID: 4525689046480915791, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
       propertyPath: path
@@ -42891,14 +43012,15 @@ PrefabInstance:
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 2027506267}
-    m_RemovedComponents: []
+    m_RemovedComponents:
+    - {fileID: 5159963152736950255, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
     m_AddedComponents:
     - targetCorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1881425864}
+      addedObject: {fileID: 1881425873}
   m_SourcePrefab: {fileID: 100100000, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e, type: 3}
 --- !u!4 &759096981 stripped
 Transform:
@@ -43398,6 +43520,7 @@ MonoBehaviour:
   puzzleManager: {fileID: 1065774747}
   enemy: {fileID: 1881425863}
   puzzleMarker: {fileID: 1281906914}
+  boxActivator1: {fileID: 2027506263}
 --- !u!4 &818951431 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 1550208475266322740, guid: 39e11c6a212d019438cc510e6b9e30f7,
@@ -43582,6 +43705,25 @@ NavMeshAgent:
     type: 3}
   m_PrefabInstance: {fileID: 225854783}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &834124424
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 183647106}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8850599f9b3997349a346df8b467be18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
+  chaseStartStinger: {fileID: 0}
+  chaseEndStinger: {fileID: 0}
+  loopVolume: 0.6
+  fadeTime: 0.35
+  loopSource: {fileID: 0}
+  sfxSource: {fileID: 0}
 --- !u!1 &843658593
 GameObject:
   m_ObjectHideFlags: 0
@@ -45056,6 +45198,25 @@ NavMeshAgent:
     type: 3}
   m_PrefabInstance: {fileID: 371502734}
   m_PrefabAsset: {fileID: 0}
+--- !u!114 &1190191038
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 550215133}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8850599f9b3997349a346df8b467be18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
+  chaseStartStinger: {fileID: 0}
+  chaseEndStinger: {fileID: 0}
+  loopVolume: 0.6
+  fadeTime: 0.35
+  loopSource: {fileID: 0}
+  sfxSource: {fileID: 0}
 --- !u!1 &1210897631 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 547412818205366287, guid: 39e11c6a212d019438cc510e6b9e30f7,
@@ -56489,6 +56650,31 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1482188655}
   m_CullTransparentMesh: 1
+--- !u!1 &1488923538 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 409565521413371568, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+    type: 3}
+  m_PrefabInstance: {fileID: 302085944}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &1488923547
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1488923538}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8850599f9b3997349a346df8b467be18, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
+  chaseStartStinger: {fileID: 0}
+  chaseEndStinger: {fileID: 0}
+  loopVolume: 0.6
+  fadeTime: 0.35
+  loopSource: {fileID: 0}
+  sfxSource: {fileID: 0}
 --- !u!1 &1501429807
 GameObject:
   m_ObjectHideFlags: 0
@@ -59438,7 +59624,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 43623f242e6bb584792e6e30d0c9dd1b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
---- !u!114 &1881425864
+--- !u!114 &1881425873
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -59447,7 +59633,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 747819390}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e202fad632a2e0544833dde23881fa62, type: 3}
+  m_Script: {fileID: 11500000, guid: 8850599f9b3997349a346df8b467be18, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
@@ -60342,6 +60528,7 @@ MonoBehaviour:
   puzzleManager: {fileID: 1065774747}
   enemy: {fileID: 1881425863}
   puzzleMarker: {fileID: 2097190588}
+  boxActivator1: {fileID: 2027506263}
 --- !u!114 &2019176576
 MonoBehaviour:
   m_ObjectHideFlags: 0

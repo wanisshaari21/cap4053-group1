@@ -41,6 +41,9 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     public GhostBrain enemy;
     public Transform puzzleMarker;
 
+    [Header("Other Puzzle Box")]
+    public GameObject boxActivator1; // Drag BoxActivator1 here in Inspector
+
     void OnEnable()
     {
         SetupRound();
@@ -225,6 +228,14 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
         if (success)
         {
             firstPuzzleCompleted = true;
+
+            // Disable BoxActivator1's collider so puzzle can't be reopened
+            if (boxActivator1 != null)
+            {
+                BoxCollider2D bc = boxActivator1.GetComponent<BoxCollider2D>();
+                if (bc != null)
+                    bc.enabled = false;
+            }
         }
 
         // pause so player can read the final text

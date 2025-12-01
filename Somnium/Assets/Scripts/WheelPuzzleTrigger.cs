@@ -42,7 +42,7 @@ public class WheelPuzzleTrigger : MonoBehaviour
             isPlayerNear = false;
 
             // Optional: hide puzzle if player walks away
-            if (isPuzzleActive)
+            if (isPuzzleActive && wheelPuzzle != null && wheelPuzzle.puzzleUI != null)
             {
                 wheelPuzzle.puzzleUI.SetActive(false);
                 isPuzzleActive = false;

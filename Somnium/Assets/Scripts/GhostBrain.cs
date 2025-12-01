@@ -44,6 +44,26 @@ public class GhostBrain : MonoBehaviour
     private bool lastPhaseState = false;
     private Collider2D col;
 
+    [Header("Teleportation")]
+    public float teleportDistance = 5f;
+    public float teleportCooldown = 5f;
+    public float teleportDelayAtChaseStart = 1f;
+
+    private float teleportTimer = 0f;       // counts down between teleports
+    private bool teleportFirstDelay = true; // wait 1s before first teleport
+
+    [Header("Teleport Settings")]
+    private bool isTeleporting = false;
+
+    [Header("Teleportation")]
+    private float teleportChaseTimer = 0f;
+
+    [Header("Hallucination Settings")]
+    public GameObject hallucinationPrefab;  // red ghost prefab
+    public float hallucinationInterval = 10f;
+    public float hallucinationSpeed = 12f;  // faster than normal
+    private float chaseTimer = 0f;
+
 
     void Awake()
     {
@@ -201,6 +221,10 @@ public class GhostBrain : MonoBehaviour
             agent.isStopped = false;
             agent.speed = chaseSpeed;
         }
+
+        // Start teleport delay timer
+        teleportTimer = teleportDelayAtChaseStart; // start with 1s delay
+        teleportFirstDelay = true;
     }
 
     void EnterSearch()
@@ -321,6 +345,12 @@ public class GhostBrain : MonoBehaviour
             {
                 lastSeenPos = targetPos;
                 lostTimer = loseSightToSearchTime;
+                chaseTimer += Time.deltaTime;
+                if (chaseTimer >= hallucinationInterval)
+                {
+                    //SpawnHallucination();
+                    chaseTimer = 0f; // reset
+                }
             }
             else
             {
@@ -340,6 +370,81 @@ public class GhostBrain : MonoBehaviour
             lastPhaseState = isPhasing;
         }
 
+        
+        // Countdown timer
+        teleportTimer -= Time.deltaTime;
+
+        if (teleportTimer <= 0f)
+        {
+            // Teleport
+            TeleportToPlayer();
+
+            // After first teleport, always use cooldown
+            teleportTimer = teleportCooldown;
+            teleportFirstDelay = false;
+        }
+
+    }
+
+    //void SpawnHallucination()
+    //{
+    //    if (!hallucinationPrefab || !player) return;
+
+    //    // Spawn near player or ghost
+    //    Vector2 spawnPos = (Vector2)transform.position + Random.insideUnitCircle.normalized * 1.5f;
+
+    //    GameObject hallucination = Instantiate(hallucinationPrefab, spawnPos, Quaternion.identity);
+    //    hallucination.transform.position = new Vector3(spawnPos.x, spawnPos.y, -1f); // in front of player
+    //    var sr = hallucination.GetComponentInChildren<SpriteRenderer>();
+    //    if (sr != null)
+    //    {
+    //        sr.enabled = true;
+    //        sr.color = new Color(1, 0, 0, 1); // fully opaque red
+    //        Debug.Log($"Hallucination sprite enabled at position {hallucination.transform.position}");
+    //    }
+    //    else
+    //    {
+    //        Debug.LogWarning("No SpriteRenderer found in hallucination prefab or children!");
+    //    }
+
+    //    // Assign target and speed
+    //    HallucinationBrain hb = hallucination.GetComponent<HallucinationBrain>();
+    //    if (hb)
+    //    {
+    //        hb.player = player;
+    //        hb.speed = hallucinationSpeed;
+    //    }
+
+    //    Debug.Log($"[Ghost] Spawned hallucination at {spawnPos}");
+
+    //    if (hallucinationPrefab == null)
+    //    {
+    //        Debug.LogWarning("Hallucination prefab not assigned!");
+    //    }
+    //}
+
+    void TeleportToPlayer()
+    {
+        if (!player) return;
+
+        Vector2 randomDir = Random.insideUnitCircle.normalized * teleportDistance;
+        Vector2 targetPos = (Vector2)player.position + randomDir;
+
+        NavMeshHit hit;
+        bool onNavMesh = NavMesh.SamplePosition(targetPos, out hit, 0.5f, NavMesh.AllAreas);
+
+        if (onNavMesh)
+        {
+            if (agent) agent.Warp(hit.position);
+            else transform.position = hit.position;
+
+            Debug.Log($"[Ghost] Teleported to {hit.position}");
+        }
+        else
+        {
+            Debug.Log($"[Ghost] Teleport failed, starting phase toward player from {transform.position}");
+            StartPhasing();
+        }
     }
 
 

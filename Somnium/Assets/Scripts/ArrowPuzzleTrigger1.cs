@@ -42,7 +42,8 @@ public class ArrowPuzzleTrigger1 : MonoBehaviour
             isPlayerNear = false;
 
             // Optional: hide puzzle if player walks away
-            if (isPuzzleActive)
+
+            if (isPuzzleActive && arrowPuzzle != null && arrowPuzzle.puzzleUI != null)
             {
                 arrowPuzzle.puzzleUI.SetActive(false);
                 isPuzzleActive = false;
