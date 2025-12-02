@@ -12,6 +12,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
     public Image hitZone;
     public Image perfectZone;
     public TextMeshProUGUI feedbackText;
+    public TextMeshProUGUI feedbackText2;
     public Transform hitZonePivot;   // parent of hitZone and perfectZone
 
     [Header("Settings")]
@@ -85,7 +86,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
         if (timerRunning)
         {
             timeRemaining -= Time.deltaTime;
-            feedbackText.text = $"{currentRound + 1}/{totalRounds}\nTime: {Mathf.Ceil(timeRemaining)}\n" + $"Score:\n{totalScore} / {requiredScore}";
+            feedbackText.text = $"{currentRound + 1}/{totalRounds}\nTime: {Mathf.Ceil(timeRemaining)}\n";
 
             if (timeRemaining <= 0f)
             {
@@ -143,6 +144,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
         {
             totalScore += perfectScore;
             feedbackText.text = "Perfect! (+25)";
+            feedbackText2.text = "Hit spacebar at the correct timing!\n" + $"Score: {totalScore} / {requiredScore}";
             currentRound++;
 
             if (currentRound < totalRounds)
@@ -155,6 +157,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
         {
             totalScore += goodScore;
             feedbackText.text = "Good! (+10)";
+            feedbackText2.text = "Hit spacebar at the correct timing!\n" + $"Score: {totalScore} / {requiredScore}";
             currentRound++;
 
             if (currentRound < totalRounds)
