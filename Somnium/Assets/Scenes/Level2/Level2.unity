@@ -42971,6 +42971,11 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
+      propertyPath: maxPuzzleTime
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
