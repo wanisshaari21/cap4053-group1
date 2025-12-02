@@ -19,7 +19,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
     //public float rotationSpeed = 180f; // degrees per second
     public float hitZoneAngle = 60f;   // how wide white area is
     public float perfectZoneAngle = 15f; // small inner region
-    public float perfectScore = 25f;
+    public float perfectScore = 20f;
     public float goodScore = 10f;
 
     private int currentRound = 0;
@@ -44,6 +44,9 @@ public class Timing2WheelPuzzle : MonoBehaviour
     public float roundTime = 10f; // seconds allowed per round
     private float timeRemaining;
     private bool timerRunning = false;
+
+    [Header("Score Requirement")]
+    public float requiredScore = 60f;
 
     void Start()
     {
@@ -179,10 +182,24 @@ public class Timing2WheelPuzzle : MonoBehaviour
 
     void EndPuzzle()
     {
-        feedbackText.text = "Success!";
         puzzleActive = false;
 
-        StartCoroutine(EndPuzzleDelay(2f));
+        if (totalScore >= requiredScore) // At the moment 60
+        {
+            feedbackText.text = "Success!";
+            StartCoroutine(EndPuzzleDelay(2f));
+        }
+
+        else
+        {
+            feedbackText.text = "Failed! Score not high enough.";
+            if (enemy != null)
+            {
+                enemy.EnterGoToPuzzle(puzzleMarker);
+            }
+            // Hide puzzle UI automatically after 2 seconds
+            StartCoroutine(EndPuzzleAfterDelay(2f));
+        }
     }
 
     IEnumerator NextRoundDelay()
