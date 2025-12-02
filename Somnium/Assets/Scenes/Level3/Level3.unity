@@ -241,6 +241,7 @@ MonoBehaviour:
   rotationSpeed: 180
   Phase2Wheel: {fileID: 2037945327}
   roundTime: 3
+  requiredScore: 60
   telegraphAngle: 0
 --- !u!224 &99426089
 RectTransform:
@@ -25899,7 +25900,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -165, y: 175}
+  m_AnchoredPosition: {x: -165, y: 205}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &639254521
@@ -25922,7 +25923,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hit spacebar at the correct timing!
+  m_text: 'Hit spacebar at the correct timing!
+
+    Score high enough to proceed!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -26667,7 +26670,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -165, y: 175}
+  m_AnchoredPosition: {x: -165, y: 205}
   m_SizeDelta: {x: 200, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1029056582
@@ -26690,7 +26693,9 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Hit spacebar at the correct timing!
+  m_text: 'Hit spacebar at the correct timing!
+
+    Score high enough to proceed!'
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -26843,6 +26848,7 @@ MonoBehaviour:
   rotationSpeed: 270
   Phase2Wheel: {fileID: 2037945327}
   roundTime: 3
+  requiredScore: 60
   telegraphAngle: 0
 --- !u!114 &1031978723
 MonoBehaviour:

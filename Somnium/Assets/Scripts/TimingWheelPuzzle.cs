@@ -182,17 +182,21 @@ public class TimingWheelPuzzle : MonoBehaviour
 
     void EndPuzzle()
     {
-        puzzleActive = false;
-
-        if (totalScore >= requiredScore)
+        if (totalScore >= requiredScore) // At the moment 60
         {
             feedbackText.text = "Success!";
+            puzzleActive = false;
+            if (puzzleManager != null)
+                puzzleManager.PuzzleCompleted();
+            if (puzzleTrigger != null)
+                puzzleTrigger.PuzzleCompleted();
             StartCoroutine(EndPuzzleDelay(2f));
         }
 
         else
         {
             feedbackText.text = "Failed! Score not high enough.";
+            puzzleActive = false;
             if (enemy != null)
             {
                 enemy.EnterGoToPuzzle(puzzleMarker);
@@ -242,7 +246,6 @@ public class TimingWheelPuzzle : MonoBehaviour
     private IEnumerator EndPuzzleDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        puzzleActive = false;
         puzzleUI.SetActive(false);
 
         if (totalScore >= perfectScore * totalRounds)
@@ -264,11 +267,6 @@ public class TimingWheelPuzzle : MonoBehaviour
             Debug.Log("Phase 2: 360° telegraph (guaranteed hit)");
             if (enemy != null) enemy.EnterGoToPuzzle(puzzleMarker);
         }
-
-        if (puzzleManager != null)
-            puzzleManager.PuzzleCompleted();
-        if (puzzleTrigger != null)
-            puzzleTrigger.PuzzleCompleted();
 
         //// Launch Phase 2 Timing Wheel
         //StartPhase2TimingWheel();
