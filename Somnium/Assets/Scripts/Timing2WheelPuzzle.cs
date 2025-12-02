@@ -85,7 +85,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
         if (timerRunning)
         {
             timeRemaining -= Time.deltaTime;
-            feedbackText.text = $"{currentRound + 1}/{totalRounds}\nTime: {Mathf.Ceil(timeRemaining)}";
+            feedbackText.text = $"{currentRound + 1}/{totalRounds}\nTime: {Mathf.Ceil(timeRemaining)}\n" + $"Score:\n{totalScore} / {requiredScore}";
 
             if (timeRemaining <= 0f)
             {
@@ -141,8 +141,8 @@ public class Timing2WheelPuzzle : MonoBehaviour
         // PERFECT: within tiny symmetric window
         if (Mathf.Abs(centerAngle) <= halfPerfect)
         {
-            feedbackText.text = "Perfect!";
             totalScore += perfectScore;
+            feedbackText.text = "Perfect! (+25)";
             currentRound++;
 
             if (currentRound < totalRounds)
@@ -153,8 +153,8 @@ public class Timing2WheelPuzzle : MonoBehaviour
         // GOOD: within larger symmetric window
         else if (Mathf.Abs(centerAngle) <= halfHit)
         {
-            feedbackText.text = "Good!";
             totalScore += goodScore;
+            feedbackText.text = "Good! (+10)";
             currentRound++;
 
             if (currentRound < totalRounds)

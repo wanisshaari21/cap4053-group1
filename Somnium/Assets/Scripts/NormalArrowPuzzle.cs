@@ -32,10 +32,14 @@ public class NormalArrowPuzzle : MonoBehaviour
 
     public EnemyBrain enemy;
     public Transform puzzleMarker;
+    private Animator animator;
 
     void Start()
     {
+        animator = GetComponent<Animator>();
         puzzleUI.SetActive(false);
+        if (animator != null)
+            animator.SetBool("isMoving", true);
     }
 
     public void StartPuzzle()
@@ -246,10 +250,16 @@ public class NormalArrowPuzzle : MonoBehaviour
         yield return new WaitForSeconds(delay);
 
         // Now hide the UI and unblock the player
-        puzzleUI.SetActive(false);
+        if (puzzleUI != null)
+        {
+            puzzleUI.SetActive(false);
+        }
 
         // Tell PuzzleTrigger the puzzle is over
-        ArrowPuzzleTrigger1.isPuzzleActive = false;
+        if (puzzleTrigger != null)
+        {
+            ArrowPuzzleTrigger1.isPuzzleActive = false;
+        }
     }
 
     void PuzzleWin()
