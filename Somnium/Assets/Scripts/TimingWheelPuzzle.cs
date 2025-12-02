@@ -45,6 +45,9 @@ public class TimingWheelPuzzle : MonoBehaviour
     private float timeRemaining;
     private bool timerRunning = false;
 
+    [Header("Score Requirement")]
+    public float requiredScore = 60f;
+
     void Start()
     {
         puzzleUI.SetActive(false);
@@ -179,10 +182,24 @@ public class TimingWheelPuzzle : MonoBehaviour
 
     void EndPuzzle()
     {
-        feedbackText.text = "Success!";
         puzzleActive = false;
 
-        StartCoroutine(EndPuzzleDelay(2f));
+        if (totalScore >= requiredScore)
+        {
+            feedbackText.text = "Success!";
+            StartCoroutine(EndPuzzleDelay(2f));
+        }
+
+        else
+        {
+            feedbackText.text = "Failed! Score not high enough.";
+            if (enemy != null)
+            {
+                enemy.EnterGoToPuzzle(puzzleMarker);
+            }
+            // Hide puzzle UI automatically after 2 seconds
+            StartCoroutine(EndPuzzleAfterDelay(2f));
+        }
     }
 
     IEnumerator NextRoundDelay()
