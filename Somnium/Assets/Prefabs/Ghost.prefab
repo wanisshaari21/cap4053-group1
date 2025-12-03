@@ -17,20 +17,16 @@ GameObject:
   - component: {fileID: 5159963152736950255}
   - component: {fileID: 3784492649400154328}
   - component: {fileID: 8028013519869020974}
-<<<<<<< HEAD
-  - component: {fileID: 6695003507996697694}
-=======
   - component: {fileID: 3770466970771401717}
   - component: {fileID: 2029783507220247828}
   - component: {fileID: 212864327101771988}
->>>>>>> a02bbee2ebdd8c233482916c34602775a8d0c5e4
   m_Layer: 3
   m_Name: Ghost
   m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!4 &14663073609787116
 Transform:
   m_ObjectHideFlags: 0
@@ -220,7 +216,7 @@ MonoBehaviour:
   patrol: {fileID: 4525689046480915791}
   fov: {fileID: 465213841023243160}
   player: {fileID: 0}
-  agent: {fileID: 8028013519869020974}
+  agent: {fileID: 0}
   patrolSpeed: 1.5
   chaseSpeed: 4
   loseSightToSearchTime: 3
@@ -245,7 +241,7 @@ MonoBehaviour:
   patrol: {fileID: 4525689046480915791}
   fov: {fileID: 465213841023243160}
   player: {fileID: 0}
-  agent: {fileID: 8028013519869020974}
+  agent: {fileID: 0}
   patrolSpeed: 1.5
   chaseSpeed: 4
   loseSightToSearchTime: 3
@@ -280,11 +276,7 @@ NavMeshAgent:
   m_BaseOffset: 1.125
   m_WalkableMask: 4294967295
   m_ObstacleAvoidanceType: 4
-<<<<<<< HEAD
---- !u!114 &6695003507996697694
-=======
 --- !u!114 &3770466970771401717
->>>>>>> a02bbee2ebdd8c233482916c34602775a8d0c5e4
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -303,8 +295,6 @@ MonoBehaviour:
   fadeTime: 0.35
   loopSource: {fileID: 0}
   sfxSource: {fileID: 0}
-<<<<<<< HEAD
-=======
 --- !u!82 &2029783507220247828
 AudioSource:
   m_ObjectHideFlags: 0
@@ -417,7 +407,6 @@ MonoBehaviour:
   chaseLoop: {fileID: 8300000, guid: c5172931fcfe7a0448a0d5d0859e44f6, type: 3}
   volume: 0.8
   use3DSound: 0
->>>>>>> a02bbee2ebdd8c233482916c34602775a8d0c5e4
 --- !u!1 &759961511656210694
 GameObject:
   m_ObjectHideFlags: 0
