@@ -45,7 +45,7 @@ public class GhostBrain : MonoBehaviour
     private Collider2D col;
 
     [Header("Teleportation")]
-    public float teleportDistance = 5f;
+    public float teleportDistance = 2f;
     public float teleportCooldown = 5f;
     public float teleportDelayAtChaseStart = 1f;
 
