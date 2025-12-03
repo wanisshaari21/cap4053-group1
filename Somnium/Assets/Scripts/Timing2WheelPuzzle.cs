@@ -12,6 +12,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
     public Image hitZone;
     public Image perfectZone;
     public TextMeshProUGUI feedbackText;
+    public TextMeshProUGUI feedbackText2;
     public Transform hitZonePivot;   // parent of hitZone and perfectZone
 
     [Header("Settings")]
@@ -19,7 +20,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
     //public float rotationSpeed = 180f; // degrees per second
     public float hitZoneAngle = 60f;   // how wide white area is
     public float perfectZoneAngle = 15f; // small inner region
-    public float perfectScore = 25f;
+    public float perfectScore = 20f;
     public float goodScore = 10f;
 
     private int currentRound = 0;
@@ -44,6 +45,9 @@ public class Timing2WheelPuzzle : MonoBehaviour
     public float roundTime = 10f; // seconds allowed per round
     private float timeRemaining;
     private bool timerRunning = false;
+
+    [Header("Score Requirement")]
+    public float requiredScore = 60f;
 
     void Start()
     {
@@ -82,7 +86,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
         if (timerRunning)
         {
             timeRemaining -= Time.deltaTime;
-            feedbackText.text = $"{currentRound + 1}/{totalRounds}\nTime: {Mathf.Ceil(timeRemaining)}";
+            feedbackText.text = $"{currentRound + 1}/{totalRounds}\nTime: {Mathf.Ceil(timeRemaining)}\n";
 
             if (timeRemaining <= 0f)
             {
@@ -138,8 +142,9 @@ public class Timing2WheelPuzzle : MonoBehaviour
         // PERFECT: within tiny symmetric window
         if (Mathf.Abs(centerAngle) <= halfPerfect)
         {
-            feedbackText.text = "Perfect!";
             totalScore += perfectScore;
+            feedbackText.text = "Perfect! (+25)";
+            feedbackText2.text = "Hit spacebar at the correct timing!\n" + $"Score: {totalScore} / {requiredScore}";
             currentRound++;
 
             if (currentRound < totalRounds)
@@ -150,8 +155,9 @@ public class Timing2WheelPuzzle : MonoBehaviour
         // GOOD: within larger symmetric window
         else if (Mathf.Abs(centerAngle) <= halfHit)
         {
-            feedbackText.text = "Good!";
             totalScore += goodScore;
+            feedbackText.text = "Good! (+10)";
+            feedbackText2.text = "Hit spacebar at the correct timing!\n" + $"Score: {totalScore} / {requiredScore}";
             currentRound++;
 
             if (currentRound < totalRounds)
@@ -179,10 +185,28 @@ public class Timing2WheelPuzzle : MonoBehaviour
 
     void EndPuzzle()
     {
-        feedbackText.text = "Success!";
-        puzzleActive = false;
+        if (totalScore >= requiredScore) // At the moment 60
+        {
+            feedbackText.text = "Success!";
+            puzzleActive = false;
+            if (puzzleManager != null)
+                puzzleManager.PuzzleCompleted();
+            if (puzzleTrigger != null)
+                puzzleTrigger.PuzzleCompleted();
+            StartCoroutine(EndPuzzleDelay(2f));
+        }
 
-        StartCoroutine(EndPuzzleDelay(2f));
+        else
+        {
+            feedbackText.text = "Failed! Score not high enough.";
+            puzzleActive = false;
+            if (enemy != null)
+            {
+                enemy.EnterGoToPuzzle(puzzleMarker);
+            }
+            // Hide puzzle UI automatically after 2 seconds
+            StartCoroutine(EndPuzzleAfterDelay(2f));
+        }
     }
 
     IEnumerator NextRoundDelay()
@@ -225,7 +249,6 @@ public class Timing2WheelPuzzle : MonoBehaviour
     private IEnumerator EndPuzzleDelay(float delay)
     {
         yield return new WaitForSeconds(delay);
-        puzzleActive = false;
         puzzleUI.SetActive(false);
 
         if (totalScore >= perfectScore * totalRounds)
@@ -247,11 +270,6 @@ public class Timing2WheelPuzzle : MonoBehaviour
             Debug.Log("Phase 2: 360° telegraph (guaranteed hit)");
             if (enemy != null) enemy.EnterGoToPuzzle(puzzleMarker);
         }
-
-        if (puzzleManager != null)
-            puzzleManager.PuzzleCompleted();
-        if (puzzleTrigger != null)
-            puzzleTrigger.PuzzleCompleted();
 
         //// Launch Phase 2 Timing Wheel
         //StartPhase2TimingWheel();

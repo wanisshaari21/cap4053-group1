@@ -3,51 +3,82 @@ using UnityEngine.SceneManagement;
 
 public class PauseMenu : MonoBehaviour
 {
+    [Header("Panels")]
     public GameObject pausePanel;  
+    public GameObject audioPanel;   
 
-    bool isOpen = false;
+    private bool isPaused = false;
 
     void Start()
     {
-        CloseMenu();   // hidden on start
-    }
-
-    public void ToggleMenu()
-    {
-        if (isOpen) CloseMenu();
-        else OpenMenu();
-    }
-
-    public void OpenMenu()
-    {
-        isOpen = true;
-        if (pausePanel) pausePanel.SetActive(true);
-        Time.timeScale = 0f;   // pause game
-    }
-
-    public void CloseMenu()
-    {
-        isOpen = false;
+        // make sure everything starts hidden
         if (pausePanel) pausePanel.SetActive(false);
-        Time.timeScale = 1f;   // unpause
+        if (audioPanel) audioPanel.SetActive(false);
+        Time.timeScale = 1f;
     }
 
-    public void GoToMainMenu()
+    void Update()
+    {
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            if (!isPaused)
+            {
+                OpenPause();
+            }
+            else
+            {
+                // If audio panel is open, go back to pause panel
+                if (audioPanel && audioPanel.activeSelf)
+                {
+                    ShowPauseFromAudio();
+                }
+                else
+                {
+                    Resume();
+                }
+            }
+        }
+    }
+
+    public void OpenPause()
+    {
+        isPaused = true;
+        Time.timeScale = 0f;
+
+        if (pausePanel) pausePanel.SetActive(true);
+        if (audioPanel) audioPanel.SetActive(false);  
+    }
+
+    public void Resume()
+    {
+        isPaused = false;
+        Time.timeScale = 1f;
+
+        if (pausePanel) pausePanel.SetActive(false);
+        if (audioPanel) audioPanel.SetActive(false);   
+    }
+
+    public void OpenAudioPanel()
+    {
+        if (pausePanel) pausePanel.SetActive(false);
+        if (audioPanel) audioPanel.SetActive(true);
+    }
+
+    public void ShowPauseFromAudio()
+    {
+        if (audioPanel) audioPanel.SetActive(false);
+        if (pausePanel) pausePanel.SetActive(true);
+    }
+
+    public void LoadMainMenu()
     {
         Time.timeScale = 1f;
         SceneManager.LoadScene("MainMenu");
     }
 
-    public void ToggleAudio()
-    {
-        if (AudioManager.I != null)
-            AudioManager.I.ToggleMute();
-    }
-
     public void QuitGame()
     {
-        Time.timeScale = 1f;
-        Application.Quit();
         Debug.Log("Quit from pause menu");
+        Application.Quit();
     }
 }
