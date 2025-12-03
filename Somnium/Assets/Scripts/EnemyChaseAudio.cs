@@ -6,16 +6,16 @@ public class EnemyChaseAudio : MonoBehaviour
 {
     [Header("Clips")]
     public AudioClip chaseLoop;          // looping “danger” bed
-    public AudioClip chaseStartStinger;  // optional one-shot when chase begins
-    public AudioClip chaseEndStinger;    // optional one-shot when chase ends
+    public AudioClip chaseStartStinger; 
+    public AudioClip chaseEndStinger;    
 
     [Header("Settings")]
     [Range(0f, 1f)] public float loopVolume = 0.6f;
-    public float fadeTime = 0.35f;       // crossfade speed
+    public float fadeTime = 0.35f;      
 
     [Header("Routing")]
-    public AudioSource loopSource;       // 2D AudioSource for the loop (created below)
-    public AudioSource sfxSource;        // 2D AudioSource for one-shots (optional)
+    public AudioSource loopSource;     
+    public AudioSource sfxSource;      
 
     private EnemyBrain brain;
     private EnemyState lastState;

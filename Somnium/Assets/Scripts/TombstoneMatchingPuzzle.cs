@@ -44,6 +44,20 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     [Header("Other Puzzle Box")]
     public GameObject boxActivator1; // Drag BoxActivator1 here in Inspector
 
+    [Header("Audio")]
+    public AudioClip puzzleFailSFX;      // drag fail SFX here
+    private AudioSource audioSource;     // local audio source
+
+    void Start()
+    {
+        // cache AudioSource on this object
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogWarning("TombstoneMatchingPuzzle: No AudioSource found on this GameObject.");
+        }
+    }
+
     void OnEnable()
     {
         SetupRound();
@@ -111,7 +125,6 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
     public void ClickTomb5() { ClickTomb(5); }
     public void ClickTomb6() { ClickTomb(6); }
     public void ClickTomb7() { ClickTomb(7); }
-    // Just don’t assign the extra ones on the 4-tombstone puzzle.
     // ---------------------------------------------
 
     void ClickTomb(int index)
@@ -141,6 +154,21 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
 
         inputLocked = true;
         StartCoroutine(CheckPairCoroutine(firstIndex, index));
+    }
+
+    // helper to centralize fail sound
+    void PlayFailSFX()
+    {
+        if (audioSource != null && puzzleFailSFX != null)
+        {
+            audioSource.PlayOneShot(puzzleFailSFX);
+            Debug.Log("TombstoneMatchingPuzzle: playing fail SFX");
+        }
+        else
+        {
+            if (audioSource == null) Debug.LogWarning("TombstoneMatchingPuzzle: audioSource is NULL");
+            if (puzzleFailSFX == null) Debug.LogWarning("TombstoneMatchingPuzzle: puzzleFailSFX is NULL");
+        }
     }
 
     IEnumerator CheckPairCoroutine(int a, int b)
@@ -187,6 +215,9 @@ public class TombstoneMatchingPuzzle : MonoBehaviour
             {
                 if (infoText != null)
                     infoText.text = "You feel a chill...";
+
+                // play lose sound here
+                PlayFailSFX();
 
                 if (enemy != null)
                 {

@@ -49,9 +49,20 @@ public class Timing2WheelPuzzle : MonoBehaviour
     [Header("Score Requirement")]
     public float requiredScore = 60f;
 
+    [Header("Audio")]
+    public AudioClip puzzleFailSFX;      // drag fail SFX here
+    private AudioSource audioSource;     // local AudioSource on this object
+
     void Start()
     {
         puzzleUI.SetActive(false);
+
+        // cache AudioSource
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogWarning("Timing2WheelPuzzle: No AudioSource found on this GameObject.");
+        }
     }
 
     public void StartPuzzle()
@@ -78,10 +89,6 @@ public class Timing2WheelPuzzle : MonoBehaviour
             feedbackText.text = $"{currentRound + 1}/{totalRounds}\n";
         }
 
-        //// rotate pointer
-        //pointerAngle += rotationSpeed * Time.deltaTime;
-        //pointerImage.rectTransform.rotation = Quaternion.Euler(0, 0, -pointerAngle); // clockwise
-
         // Countdown timer
         if (timerRunning)
         {
@@ -101,13 +108,29 @@ public class Timing2WheelPuzzle : MonoBehaviour
         // check input
         if (Input.GetKeyDown(KeyCode.Space))
             CheckTiming();
+    }
 
+    // small helper so all fail paths sound the same
+    void PlayFailSFX()
+    {
+        if (audioSource != null && puzzleFailSFX != null)
+        {
+            audioSource.PlayOneShot(puzzleFailSFX);
+            Debug.Log("Timing2WheelPuzzle: playing fail SFX");
+        }
+        else
+        {
+            if (audioSource == null) Debug.LogWarning("Timing2WheelPuzzle: audioSource is NULL");
+            if (puzzleFailSFX == null) Debug.LogWarning("Timing2WheelPuzzle: puzzleFailSFX is NULL");
+        }
     }
 
     void TimerFail()
     {
         feedbackText.text = "Failed!";
         puzzleActive = false;
+
+        PlayFailSFX();
 
         if (enemy != null)
         {
@@ -122,14 +145,11 @@ public class Timing2WheelPuzzle : MonoBehaviour
         StartCoroutine(EndPuzzleAfterDelay(2f));
     }
 
-
     void CheckTiming()
     {
         timerRunning = false;
 
         roundNotEnded = false;
-        // normalize angle [0,360)
-        //float normalizedAngle = cursorPivot.eulerAngles.z % 360f;
         float relativeAngle = (cursorPivot.eulerAngles.z - hitZonePivot.eulerAngles.z + 360f) % 360f;
 
         float halfHit = hitZoneAngle / 2f;
@@ -139,7 +159,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
         float centerAngle = (relativeAngle + 360f) % 360f;
         if (centerAngle > 180f) centerAngle -= 360f;
 
-        // PERFECT: within tiny symmetric window
+        // PERFECT
         if (Mathf.Abs(centerAngle) <= halfPerfect)
         {
             totalScore += perfectScore;
@@ -152,7 +172,7 @@ public class Timing2WheelPuzzle : MonoBehaviour
             else
                 EndPuzzle();
         }
-        // GOOD: within larger symmetric window
+        // GOOD
         else if (Mathf.Abs(centerAngle) <= halfHit)
         {
             totalScore += goodScore;
@@ -169,6 +189,9 @@ public class Timing2WheelPuzzle : MonoBehaviour
         {
             feedbackText.text = "Failed!";
             puzzleActive = false;
+
+            PlayFailSFX();
+
             if (enemy != null)
             {
                 enemy.EnterGoToPuzzle(puzzleMarker);
@@ -195,11 +218,13 @@ public class Timing2WheelPuzzle : MonoBehaviour
                 puzzleTrigger.PuzzleCompleted();
             StartCoroutine(EndPuzzleDelay(2f));
         }
-
         else
         {
             feedbackText.text = "Failed! Score not high enough.";
             puzzleActive = false;
+
+            PlayFailSFX();
+
             if (enemy != null)
             {
                 enemy.EnterGoToPuzzle(puzzleMarker);
@@ -235,7 +260,6 @@ public class Timing2WheelPuzzle : MonoBehaviour
         while (randomAngle >= 195f && randomAngle <= 345f); // forbidden North region
 
         hitZonePivot.rotation = Quaternion.Euler(0, 0, -randomAngle);
-
     }
 
     public float telegraphAngle; // angle of AOE based on Phase 1
@@ -255,19 +279,22 @@ public class Timing2WheelPuzzle : MonoBehaviour
         {
             feedbackText.text = "Perfect Timing!";
             telegraphAngle = 90f; // only 1 cardinal is safe
-            Debug.Log("Phase 2: 90° telegraph (1 safe spot)");
+            Debug.Log("Phase 2: 90ï¿½ telegraph (1 safe spot)");
         }
         else if (totalScore >= goodScore * totalRounds)
         {
             feedbackText.text = "Good Timing!";
             telegraphAngle = 270f; // 3 cardinals hit
-            Debug.Log("Phase 2: 270° telegraph (1 safe spot)");
+            Debug.Log("Phase 2: 270ï¿½ telegraph (1 safe spot)");
         }
         else
         {
             feedbackText.text = "Failed!";
             telegraphAngle = 360f; // unavoidable
-            Debug.Log("Phase 2: 360° telegraph (guaranteed hit)");
+            Debug.Log("Phase 2: 360ï¿½ telegraph (guaranteed hit)");
+
+            PlayFailSFX();
+
             if (enemy != null) enemy.EnterGoToPuzzle(puzzleMarker);
         }
 
@@ -289,8 +316,6 @@ public class Timing2WheelPuzzle : MonoBehaviour
 
     void StartPhase2TimingWheel()
     {
-        // Phase 2 logic: show telegraph in middle, spawn cursor/timing wheel
-        // Set the safe spot based on telegraphAngle
         if (Phase2Wheel == null)
         {
             Debug.LogError("Phase2Wheel not assigned in inspector!");
