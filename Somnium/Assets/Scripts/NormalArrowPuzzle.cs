@@ -34,12 +34,22 @@ public class NormalArrowPuzzle : MonoBehaviour
     public Transform puzzleMarker;
     private Animator animator;
 
+    [Header("Audio")]
+    public AudioClip puzzleFailSFX;
+    private AudioSource audioSource;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         puzzleUI.SetActive(false);
         if (animator != null)
             animator.SetBool("isMoving", true);
+
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogWarning("NormalArrowPuzzle: No AudioSource found on this GameObject.");
+        }
     }
 
     public void StartPuzzle()
@@ -228,7 +238,6 @@ public class NormalArrowPuzzle : MonoBehaviour
         }
     }
 
-
     void ShowArrows()
     {
         foreach (var arrow in arrowSlots)
@@ -279,6 +288,19 @@ public class NormalArrowPuzzle : MonoBehaviour
     {
         feedbackText.text = "Failed!";
         puzzleActive = false;
+
+        // 🔊 play fail sound
+        if (audioSource != null && puzzleFailSFX != null)
+        {
+            audioSource.PlayOneShot(puzzleFailSFX);
+            Debug.Log("NormalArrowPuzzle: playing fail SFX");
+        }
+        else
+        {
+            if (audioSource == null) Debug.LogWarning("NormalArrowPuzzle: audioSource is NULL");
+            if (puzzleFailSFX == null) Debug.LogWarning("NormalArrowPuzzle: puzzleFailSFX is NULL");
+        }
+
         // TODO: subtract time / penalty
         // Enemy goes to puzzle
         if (enemy != null)

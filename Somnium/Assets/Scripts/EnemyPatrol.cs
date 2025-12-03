@@ -12,7 +12,6 @@ public class EnemyPatrol : MonoBehaviour
 
     public VisionCone fov;                  
     public Transform player;               
-
     private readonly List<Vector2> points = new();
     private int index = 0;
     private int direction = 1;
