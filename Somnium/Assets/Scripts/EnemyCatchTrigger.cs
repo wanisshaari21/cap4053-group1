@@ -10,6 +10,7 @@ public class EnemyCatchTrigger : MonoBehaviour
     public string playerTag = "Player";
     [Tooltip("Delay before reloading the level after being caught")]
     public float reloadDelay = 1f;
+    private Animator animator;
 
     void OnTriggerEnter2D(Collider2D other)
     {
@@ -17,6 +18,18 @@ public class EnemyCatchTrigger : MonoBehaviour
         if (other.CompareTag(playerTag))
         {
             Debug.Log("Caught the player!");
+
+            animator = other.GetComponentInChildren<Animator>();
+            if (animator == null)
+            {
+                Debug.Log("Animator is null");
+            }
+            if (animator != null)
+            {
+                animator.SetBool("isMoving", true);
+                Debug.Log("Re-enabled animator");
+            }
+                
             StartCoroutine(RestartLevel());
         }
     }

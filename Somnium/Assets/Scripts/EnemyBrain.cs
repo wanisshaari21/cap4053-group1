@@ -185,12 +185,12 @@ public class EnemyBrain : MonoBehaviour
         {
             lastSeenPos = targetPos;
             lostTimer = loseSightToSearchTime; // reset timer while player visible
-            Debug.Log($"[Chase] Player visible. Reset lostTimer to {lostTimer}");
+            //Debug.Log($"[Chase] Player visible. Reset lostTimer to {lostTimer}");
         }
         else
         {
             lostTimer -= Time.deltaTime;
-            Debug.Log($"[Chase] Player not visible. Countdown: {lostTimer:F2} seconds");
+            //Debug.Log($"[Chase] Player not visible. Countdown: {lostTimer:F2} seconds");
 
             if (lostTimer <= 0f)
             {

@@ -227,6 +227,7 @@ MonoBehaviour:
   hitZone: {fileID: 1597450781}
   perfectZone: {fileID: 1651323485}
   feedbackText: {fileID: 1954397468}
+  feedbackText2: {fileID: 639254521}
   hitZonePivot: {fileID: 557434278}
   totalRounds: 4
   hitZoneAngle: 60
@@ -679,13 +680,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90d292b2c94c0d4f8af4f141b2858b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
-  chaseStartStinger: {fileID: 0}
-  chaseEndStinger: {fileID: 0}
-  loopVolume: 0.6
-  fadeTime: 0.35
-  loopSource: {fileID: 0}
-  sfxSource: {fileID: 0}
 --- !u!1 &244908578
 GameObject:
   m_ObjectHideFlags: 0
@@ -26991,6 +26985,7 @@ MonoBehaviour:
   hitZone: {fileID: 446571393}
   perfectZone: {fileID: 354402832}
   feedbackText: {fileID: 279502919}
+  feedbackText2: {fileID: 1029056582}
   hitZonePivot: {fileID: 18185534}
   totalRounds: 4
   hitZoneAngle: 60
@@ -28324,13 +28319,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90d292b2c94c0d4f8af4f141b2858b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
-  chaseStartStinger: {fileID: 0}
-  chaseEndStinger: {fileID: 0}
-  loopVolume: 0.6
-  fadeTime: 0.35
-  loopSource: {fileID: 0}
-  sfxSource: {fileID: 0}
 --- !u!1 &1528092297
 GameObject:
   m_ObjectHideFlags: 0
@@ -29619,13 +29607,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b90d292b2c94c0d4f8af4f141b2858b9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  chaseLoop: {fileID: 8300000, guid: 84267c0fca3d4e34db864aafabd827c8, type: 3}
-  chaseStartStinger: {fileID: 0}
-  chaseEndStinger: {fileID: 0}
-  loopVolume: 0.6
-  fadeTime: 0.35
-  loopSource: {fileID: 0}
-  sfxSource: {fileID: 0}
 --- !u!1 &2037945326
 GameObject:
   m_ObjectHideFlags: 0
