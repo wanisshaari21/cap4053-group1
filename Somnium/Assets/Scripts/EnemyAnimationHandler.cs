@@ -45,7 +45,7 @@ public class EnemyAnimationHandler : MonoBehaviour
             // Moving Right (positive X) -> Flip False
             if (Mathf.Abs(direction.x) > 0.01f)
             {
-                spriteRenderer.flipX = direction.x < 0;
+                spriteRenderer.flipX = direction.x > 0;
             }
         }
 
