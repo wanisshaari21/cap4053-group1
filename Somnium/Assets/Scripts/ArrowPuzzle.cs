@@ -34,12 +34,32 @@ public class ArrowPuzzle : MonoBehaviour
     public Transform puzzleMarker;
     private Animator animator;
 
+    [Header("Audio")]
+    public AudioClip puzzleSuccessSFX;   // played when all waves are cleared
+    public AudioClip puzzleFailSFX;      // played on fail (wrong key / timeout)
+    private AudioSource audioSource;
+
     void Start()
     {
         animator = GetComponent<Animator>();
         puzzleUI.SetActive(false);
         if (animator != null)
             animator.SetBool("isMoving", true);
+
+        // cache AudioSource on this object
+        audioSource = GetComponent<AudioSource>();
+        if (audioSource == null)
+        {
+            Debug.LogWarning("ArrowPuzzle: No AudioSource found on this GameObject.");
+        }
+    }
+
+    void PlaySFX(AudioClip clip)
+    {
+        if (audioSource != null && clip != null)
+        {
+            audioSource.PlayOneShot(clip);
+        }
     }
 
     public void StartPuzzle()
@@ -227,7 +247,6 @@ public class ArrowPuzzle : MonoBehaviour
         }
     }
 
-
     void ShowArrows()
     {
         foreach (var arrow in arrowSlots)
@@ -266,6 +285,9 @@ public class ArrowPuzzle : MonoBehaviour
         feedbackText.text = "Success!";
         puzzleActive = false;
 
+        // 🔊 success SFX
+        PlaySFX(puzzleSuccessSFX);
+
         if (puzzleManager != null)
             puzzleManager.PuzzleCompleted();
         if (puzzleTrigger != null)
@@ -278,6 +300,10 @@ public class ArrowPuzzle : MonoBehaviour
     {
         feedbackText.text = "Failed!";
         puzzleActive = false;
+
+        // 🔊 fail SFX
+        PlaySFX(puzzleFailSFX);
+
         // TODO: subtract time / penalty
         // Enemy goes to puzzle
         if (enemy != null)
