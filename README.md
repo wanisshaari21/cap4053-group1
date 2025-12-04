@@ -3,6 +3,41 @@
 - Extract SomniumFinalBuilD.zip
 - Double-Click the Somnium.exe
 
+A dark, fast-paced top-down puzzle-stealth adventure
+where every corner hides danger, every solved puzzle brings you closer to escape,
+and looping around gems gives you the speed to outwit pursuing monsters.
+
+🎮 Overview
+This game blends puzzle-solving, stealth, and chase mechanics in a dark, atmospheric maze.
+Use your wits, speed, and timing to survive and reach the exit before enemies catch you.
+
+⚙️ How to Play
+Move: W A S D or Arrow Keys
+
+Goal: Escape the nightmares by finding and completing the puzzles to unlock the exits while avoiding detection.
+
+Looping Gem Mechanic: Circle around the glowing gem and hit all four sides to gain a temporary speed boost.
+Use it to outrun enemies or dash through dangerous zones.
+💡 Features
+✨ Dynamic 2D lighting and shadow system
+⚡ Unique loopable gem speed-boost mechanic
+👁️ Enemy AI that hunts and reacts to your movements
+🎵 Immersive atmosphere with music and visual cues
+🧩 Challenging levels that reward patience and strategy
+
+🕹️ Controls
+Action	Key
+Move	W A S D / Arrow Keys
+Interact with Puzzles	F
+Pause	Esc
+
+🧠 Tips
+Loop gems completely to activate the speed boost to espace enemy chase.
+
+Plan your route — enemies react quickly.
+
+Speed boosts are temporary — use them wisely!
+
 ## Known Bugs:
 - The game may freeze when the player runs out of time in the first puzzle of level 1 and the zombie catches them.
 - Zombies can’t move through the small hallway in the top of level 1.
