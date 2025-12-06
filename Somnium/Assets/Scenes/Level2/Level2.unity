@@ -1864,6 +1864,11 @@ PrefabInstance:
       objectReference: {fileID: 1281906914}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
+      propertyPath: teleportCooldown
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
+        type: 3}
       propertyPath: hallucinationPrefab
       value: 
       objectReference: {fileID: 8565965419365681440, guid: 527494ef5350545b2a476f6ed1a23c9c,
@@ -43380,7 +43385,7 @@ PrefabInstance:
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
       propertyPath: teleportCooldown
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 3784492649400154328, guid: 2d0c04fb5c6dedf4fb15e713ee4beb8e,
         type: 3}
@@ -44295,6 +44300,11 @@ PrefabInstance:
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
+        type: 3}
+      propertyPath: teleportDistance
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: hallucinationPrefab
@@ -56805,6 +56815,11 @@ PrefabInstance:
       objectReference: {fileID: 1281906914}
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
+      propertyPath: teleportDistance
+      value: 6
+      objectReference: {fileID: 0}
+    - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
+        type: 3}
       propertyPath: hallucinationPrefab
       value: 
       objectReference: {fileID: 2987644345917029367, guid: 645841ead52e9e041a60ef848a6d29b3,
@@ -58575,13 +58590,18 @@ PrefabInstance:
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: phaseDistance
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
+        type: 3}
+      propertyPath: teleportDistance
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: hallucinationPrefab
@@ -62684,13 +62704,23 @@ PrefabInstance:
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: phaseDistance
-      value: 5
+      value: 6
       objectReference: {fileID: 0}
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: puzzlePosition
       value: 
       objectReference: {fileID: 1281906914}
+    - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
+        type: 3}
+      propertyPath: teleportCooldown
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
+        type: 3}
+      propertyPath: teleportDistance
+      value: 6
+      objectReference: {fileID: 0}
     - target: {fileID: 2159842281181078015, guid: 645841ead52e9e041a60ef848a6d29b3,
         type: 3}
       propertyPath: hallucinationPrefab

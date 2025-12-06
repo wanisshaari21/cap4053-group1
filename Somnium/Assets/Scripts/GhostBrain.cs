@@ -33,7 +33,7 @@ public class GhostBrain : MonoBehaviour
     public EnemyState state = EnemyState.Patrol;
 
     [Header("Ghost Phase Settings")]
-    public float phaseDistance = 10f;       // start phasing if player this far away
+    public float phaseDistance = 6f;       // start phasing if player this far away
     public float phaseSpeed = 8f;           // how fast ghost moves when phasing
     public float unphaseBuffer = 1.5f;      // distance threshold to safely unphase
 
